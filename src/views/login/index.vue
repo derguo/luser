@@ -47,7 +47,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div style="position:relative">
+      <div v-if="false" style="position:relative">
         <div class="tips">
           <span>Username : admin</span>
           <span>Password : any</span>
