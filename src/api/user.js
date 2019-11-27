@@ -1,9 +1,15 @@
 import request from '@/utils/request'
 
+const address = ''
+// const address = '192.168.70.80'
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: address + '/user/login',
     method: 'post',
+    // headers: {
+    //   'Content-Type': 'application/x-www-form-urlencoded',
+    //   'grant_type': 'password'
+    // },
     data
   })
 }

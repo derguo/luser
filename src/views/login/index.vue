@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">失联客户管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,7 +45,7 @@
         </el-form-item>
       </el-tooltip>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
 
       <div v-if="false" style="position:relative">
         <div class="tips">
@@ -134,6 +134,9 @@ export default {
       this.$refs.password.focus()
     }
   },
+  beforeDestroy() {
+    this.loading = false
+  },
   destroyed() {
     // window.removeEventListener('storage', this.afterQRScan)
   },
@@ -167,7 +170,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+              // this.loading = false
             })
             .catch(() => {
               this.loading = false
