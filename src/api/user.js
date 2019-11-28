@@ -6,10 +6,10 @@ export function login(data) {
   return request({
     url: address + '/user/login',
     method: 'post',
-    // headers: {
-    //   'Content-Type': 'application/x-www-form-urlencoded',
-    //   'grant_type': 'password'
-    // },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'grant_type': 'password'
+    },
     data
   })
 }
@@ -17,8 +17,11 @@ export function login(data) {
 export function getInfo(token) {
   return request({
     url: '/user/info',
-    method: 'get',
-    params: { token }
+    method: 'post',
+    data: {
+      token
+    }
+    // ,params: { token }
   })
 }
 

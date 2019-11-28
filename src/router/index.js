@@ -73,6 +73,19 @@ export const constantRoutes = [
   {
     path: '/',
     component: Layout,
+    redirect: '/mainpage',
+    children: [
+      {
+        path: 'mainpage',
+        component: () => import('@/views/arising/home/index'),
+        name: 'Home',
+        meta: { title: 'home', icon: 'dashboard', affix: false }
+      }
+    ]
+  },
+  {
+    path: '/d',
+    component: Layout,
     redirect: '/dashboard',
     children: [
       {
