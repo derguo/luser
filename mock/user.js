@@ -29,7 +29,7 @@ const users = {
 export default [
   // user login
   {
-    url: '/user/login',
+    url: '/token',
     type: 'post',
     response: config => {
       let configbody = null
@@ -57,7 +57,7 @@ export default [
 
   // get user info
   {
-    url: '/user/info\.*',
+    url: '/users/getone\.*',
     type: 'post',
     response: config => {
       const { token } = config.body

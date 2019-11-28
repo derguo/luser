@@ -1,10 +1,9 @@
 import request from '@/utils/request'
 
-const address = ''
-// const address = '192.168.70.80'
 export function login(data) {
+  console.log(process.env.VUE_APP_BASE_API)
   return request({
-    url: address + '/user/login',
+    url: '/token',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -16,7 +15,7 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/users/getone/',
     method: 'post',
     data: {
       token
