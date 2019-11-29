@@ -6,8 +6,9 @@ export function login(data) {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'grant_type': `password&username=${data.username}&password=${data.password}`
-    }
+      // 'grant_type': `password&username=${data.username}&password=${data.password}`
+    },
+    data:Object.assign(data,{ grant_type: 'password'})
   })
 }
 
@@ -17,7 +18,11 @@ export function refreshToken(refresh_token) {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'grant_type': `refresh_token & refresh_token = ${refresh_token}`
+      // 'grant_type': `refresh_token & refresh_token = ${refresh_token}`
+    },
+    data: {
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token 
     }
   })
 }
