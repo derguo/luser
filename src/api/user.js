@@ -1,15 +1,24 @@
 import request from '@/utils/request'
 
 export function login(data) {
-  console.log(process.env.VUE_APP_BASE_API)
   return request({
     url: '/token',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'grant_type': 'password'
-    },
-    data
+      'grant_type': `password&username=${data.username}&password=${data.password}`
+    }
+  })
+}
+
+export function refreshToken(refresh_token) {
+  return request({
+    url: '/token',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'grant_type': `refresh_token & refresh_token = ${refresh_token}`
+    }
   })
 }
 

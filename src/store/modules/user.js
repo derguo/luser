@@ -1,9 +1,10 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  refresh_token: getRefreshToken(),
   name: '',
   avatar: '',
   introduction: '',
@@ -13,6 +14,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_REFRESH_TOKEN: (state, refresh_token) => {
+    state.token = refresh_token
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -36,7 +40,9 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.access_token)
-        setToken(data.access_token)
+        commit('SET_REFRESH_TOKEN', data.refresh_token)
+        setToken(data.access_token, data.expires_in)
+        setRefreshToken(data.refresh_token)
         resolve()
       }).catch(error => {
         reject(error)

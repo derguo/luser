@@ -32,13 +32,8 @@ export default [
     url: '/token',
     type: 'post',
     response: config => {
-      let configbody = null
-      for (const key in config.body) {
-        configbody = JSON.parse(key)
-      }
-      console.log(configbody)
-      const { username } = configbody
-      const token = tokens[username]
+      const token = tokens[config.headers.grant_type.split('&')[1].split('=')[1]]
+      console.log(token)
 
       // mock error
       if (!token) {
