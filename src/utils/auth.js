@@ -8,9 +8,9 @@ export function getToken() {
 }
 
 export function setToken(token, expires_in) {
-  if (expires_in) {
-    setTimeout(removeToken, expires_in)
-  }
+  // if (expires_in) {
+  //   setTimeout(removeToken, expires_in)
+  // }
   return Cookies.set(TokenKey, token)
 }
 

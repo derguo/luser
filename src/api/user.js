@@ -5,10 +5,10 @@ export function login(data) {
     url: '/token',
     method: 'post',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
       // 'grant_type': `password&username=${data.username}&password=${data.password}`
     },
-    data:Object.assign(data,{ grant_type: 'password'})
+    data: Object.assign(data, { grant_type: 'password' })
   })
 }
 
@@ -17,22 +17,26 @@ export function refreshToken(refresh_token) {
     url: '/token',
     method: 'post',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded'
       // 'grant_type': `refresh_token & refresh_token = ${refresh_token}`
     },
     data: {
       grant_type: 'refresh_token',
-      refresh_token: refresh_token 
+      refresh_token
     }
   })
 }
 
-export function getInfo(token) {
+export function getInfo(token, username) {
   return request({
     url: '/users/getone/',
     method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
     data: {
-      token
+      username: username
     }
     // ,params: { token }
   })

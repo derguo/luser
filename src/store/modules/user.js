@@ -5,6 +5,7 @@ import router, { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   refresh_token: getRefreshToken(),
+  username: '',
   name: '',
   avatar: '',
   introduction: '',
@@ -17,6 +18,9 @@ const mutations = {
   },
   SET_REFRESH_TOKEN: (state, refresh_token) => {
     state.token = refresh_token
+  },
+  SET_USERNAME: (state, username) => {
+    state.username = username
   },
   SET_INTRODUCTION: (state, introduction) => {
     state.introduction = introduction
@@ -38,11 +42,12 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
-        setToken(data.access_token, data.expires_in)
-        setRefreshToken(data.refresh_token)
+        const { info } = response
+        commit('SET_TOKEN', info.access_token)
+        commit('SET_REFRESH_TOKEN', info.refresh_token)
+        commit('SET_USERNAME', username.trim())
+        setToken(info.access_token, info.expires_in)
+        setRefreshToken(info.refresh_token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -53,7 +58,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo(state.token, state.username).then(response => {
         const { data } = response
 
         if (!data) {

@@ -79,7 +79,7 @@ export const constantRoutes = [
         path: 'mainpage',
         component: () => import('@/views/arising/home/index'),
         name: 'Home',
-        meta: { title: 'home', icon: 'dashboard', affix: false }
+        meta: { title: 'home', icon: 'dashboard', affix: false, roles: ['0'] }
       }
     ]
   },
@@ -151,7 +151,7 @@ export const asyncRoutes = [
     meta: {
       title: 'Permission',
       icon: 'lock',
-      roles: ['admin', 'editor'] // you can set roles in root nav
+      roles: ['admin', 'editor', '0'] // you can set roles in root nav
     },
     children: [
       {
@@ -160,7 +160,7 @@ export const asyncRoutes = [
         name: 'PagePermission',
         meta: {
           title: 'Page Permission',
-          roles: ['admin'] // or you can only set roles in sub nav
+          roles: ['0'] // or you can only set roles in sub nav
         }
       },
       {
