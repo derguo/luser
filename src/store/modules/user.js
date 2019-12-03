@@ -9,7 +9,8 @@ const state = {
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  userInfo: {}
 }
 
 const mutations = {
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
   }
 }
 
@@ -59,24 +63,26 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token, state.username).then(response => {
-        const { data } = response
+        const { info } = response
 
-        if (!data) {
+        if (!info) {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar, introduction } = data
+        const { authorid, username, authorname } = info
+        info.roles = [authorid]
 
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
+        if (!info.roles || info.roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(data)
+        commit('SET_ROLES', info.roles)
+        commit('SET_NAME', username)
+        commit('SET_AVATAR', 'http://www.rising.com.cn/skin/rising/index/img/200x200-rav.png')
+        commit('SET_INTRODUCTION', authorname)
+        commit('SET_USERINFO', info)
+        resolve(info)
       }).catch(error => {
         reject(error)
       })

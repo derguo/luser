@@ -34,7 +34,7 @@ export default [
     type: 'get',
     response: _ => {
       return {
-        code: 20000,
+        errorcode: 0,
         data: {
           total: 20,
           'items|20': [{

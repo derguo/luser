@@ -3,6 +3,19 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+const errorCodeInfo = {
+  '0': 'success，成功，存在，交互正常',
+  '1': '用户名或密码错误',
+  '2': '令牌信息不正常',
+  '3': '数据库异常',
+  '4': '无此大区',
+  '5': '无此级别',
+  '-97': '符合条件的记录为 0 条',
+  '-98': '缺少必要的参数',
+  '-99': '未知异常',
+  '-1002': '用户不存在'
+}
+
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -44,17 +57,11 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    console.log('res.errorcoderes.errorcode', res.errorcode)
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.errorcode !== 0) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
 
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+    // if the custom code is not 20000, it is judged as an error.
+    res.errorcode = res.errorcode * 1
+    if (res.errorcode !== 0) {
+      if (res.errorcode === 1 || res.errorcode === 2) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
@@ -66,7 +73,14 @@ service.interceptors.response.use(
           })
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+
+      Message({
+        message: `errorcode: ${res.errorcode} -- ${errorCodeInfo[res.errorcode] || '未知错误编码'}`,
+        type: 'error',
+        duration: 5 * 1000
+      })
+
+      return Promise.reject(new Error(errorCodeInfo[res.errorcode] || '未知错误编码'))
     } else {
       return res
     }
