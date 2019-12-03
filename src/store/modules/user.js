@@ -18,7 +18,7 @@ const mutations = {
     state.token = token
   },
   SET_REFRESH_TOKEN: (state, refresh_token) => {
-    state.token = refresh_token
+    state.refresh_token = refresh_token
   },
   SET_USERNAME: (state, username) => {
     state.username = username
@@ -63,7 +63,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token, state.username).then(response => {
-        const { info } = response
+        const info = response.info[0]
 
         if (!info) {
           reject('Verification failed, please Login again.')

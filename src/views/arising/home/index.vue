@@ -1,5 +1,12 @@
 <template>
-  <div>{{ massage }}</div>
+  <div>{{ massage }}
+    <div>
+      {{ this.$store.state.user }}
+    </div>
+    <div>
+      {{ this.$store.state.user.username }}
+    </div>
+  </div>
 </template>
 
 <script>
