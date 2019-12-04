@@ -29,6 +29,18 @@ for (let i = 0; i < count; i++) {
 
 export default [
   {
+    url: '/base/*',
+    type: 'post',
+    response: config => {
+      return {
+        errorcode: 0,
+        info: [
+          1, 2
+        ]
+      }
+    }
+  },
+  {
     url: '/article/list',
     type: 'get',
     response: config => {

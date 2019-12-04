@@ -36,7 +36,7 @@ export function getInfo(token, username) {
       'Authorization': `bearer ${token}`
     },
     data: {
-      username: username
+      username
     }
     // ,params: { token }
   })
