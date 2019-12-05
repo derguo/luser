@@ -76,7 +76,6 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
-import MD5 from 'js-md5'
 
 export default {
   name: 'Login',
@@ -168,7 +167,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', { username: this.loginForm.username, password: MD5(this.loginForm.password) })
+          this.$store.dispatch('user/login', { username: this.loginForm.username, password: this.loginForm.password })
             .then(() => {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               // this.loading = false

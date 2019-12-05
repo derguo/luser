@@ -1,14 +1,14 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export function login(data) {
   return request({
-    url: '/token',
+    url: '../token',
     method: 'post',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-      // 'grant_type': `password&username=${data.username}&password=${data.password}`
+      'Access-Control-Request-Headers': 'content-type'
     },
-    data: Object.assign(data, { grant_type: 'password' })
+    data: qs.stringify(Object.assign(data, { grant_type: 'password' }))
   })
 }
 
@@ -33,11 +33,10 @@ export function getInfo(token, username) {
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `bearer ${token}`
-    },
-    data: {
+      'Authorization': `bearer ${token}`,
       username
-    }
+    },
+    data: qs.stringify({ username })
     // ,params: { token }
   })
 }
