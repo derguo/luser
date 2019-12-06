@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
-// import { getToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 
 const errorCodeInfo = {
   '0': 'success，成功，存在，交互正常',
@@ -31,7 +31,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      // config.headers['X-Token'] = getToken()
+      config.headers['X-Token'] = getToken()
     }
     return config
   },
@@ -55,7 +55,9 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
+    console.log('返回的数据', response)
     const res = response.data
+
     if (res.access_token) {
       return res
     }

@@ -1,13 +1,10 @@
 
 const tokens = {
   admin: {
-    errorcode: '0',
-    info: {
-      'access_token': 'ICE0tuBK_pi7kRhUb_Do-feCwDzrzb4_1oJtLYfPN2LabaI8K99dmVzUFgVmJmvWAuGHprgowJS_58GuZVGrcISKbCqi9GwsYcXMgdbHUvHZJjKgr5cSl73hwcwiM5S11fnx737T8AsZ6-awRqwwEn7VzZ5B5u9EePdiFQdFyXdwBatBw7XoHGFSZuWxbnmh68StOBufE-BVZSJj1RFsewoIOcwWBoeqs7fDTXA5-A5bEO3rD_yHJEGw8ONquH-2fO7_ifNHXqnAeZ67RBNhZQ_Xs33JoVPm4l3ghXU64d8oSyYtbFrjVMx_cTjNI6k9',
-      'token_type': 'bearer',
-      'expires_in': 43199,
-      'refresh_token': 'd510bd065b1d4b2f983f7d5d8b12eafd'
-    }
+    'access_token': 'ICE0tuBK_pi7kRhUb_Do-feCwDzrzb4_1oJtLYfPN2LabaI8K99dmVzUFgVmJmvWAuGHprgowJS_58GuZVGrcISKbCqi9GwsYcXMgdbHUvHZJjKgr5cSl73hwcwiM5S11fnx737T8AsZ6-awRqwwEn7VzZ5B5u9EePdiFQdFyXdwBatBw7XoHGFSZuWxbnmh68StOBufE-BVZSJj1RFsewoIOcwWBoeqs7fDTXA5-A5bEO3rD_yHJEGw8ONquH-2fO7_ifNHXqnAeZ67RBNhZQ_Xs33JoVPm4l3ghXU64d8oSyYtbFrjVMx_cTjNI6k9',
+    'token_type': 'bearer',
+    'expires_in': 43199,
+    'refresh_token': 'd510bd065b1d4b2f983f7d5d8b12eafd'
   },
   editor: {
     access_token: 'editor-token'
@@ -51,10 +48,8 @@ export default [
     url: '/token',
     type: 'post',
     response: config => {
-      let token = null
-      for (const k in config.body) {
-        token = tokens[JSON.parse(k).username]
-      }
+      const token = tokens[config.body.username]
+
       console.log(token)
       // mock error
       if (!token) {

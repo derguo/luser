@@ -143,6 +143,18 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/auser',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/arising/assign/index'),
+        name: 'auser----',
+        meta: { title: 'auser', icon: 'icon', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/permission',
     component: Layout,
     redirect: '/permission/page',
