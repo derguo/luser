@@ -148,7 +148,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/arising/assign/index'),
+        component: () => import('@/views/arising/handle/index'),
         name: 'auser----',
         meta: { title: 'auser', icon: 'icon', noCache: true }
       }
