@@ -1,5 +1,11 @@
 <template>
   <div class="app-container">
+    <div style="margin:10px 0;">
+      <label>处理状态：</label>
+      <el-button type="" @click="handelCreate">有待跟进</el-button>
+      <el-button type="">处理成功</el-button>
+      <el-button type="">失败</el-button>
+    </div>
     <el-form ref="form" label-position="left" :model="sizeForm" label-width="160px" size="mini">
       <el-form-item label="单位全称：">
         <el-input v-model="sizeForm.name" style="width: 47%;" />
@@ -73,13 +79,22 @@
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
+    <el-dialog title="有待跟进" :visible.sync="dialogFormVisible">
+      <follow-up ref="handleFrom" @upsucces="followupsuccess" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import FollowUp from '@/views/arising/handle/FollowUp'
+
 export default {
+  components: {
+    FollowUp
+  },
   data() {
     return {
+      dialogFormVisible: false,
       importanceOptions: [1, 2, 3],
       sizeForm: {
         name: '',
@@ -92,6 +107,22 @@ export default {
         desc: ''
       }
     }
+  },
+  created() {
+
+  },
+  methods: {
+    handelCreate() {
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['handleFrom'].clearValidate()
+      })
+    },
+    followupsuccess() {
+      console.log(this)
+      this.dialogFormVisible = false
+    }
+
   }
 }
 </script>

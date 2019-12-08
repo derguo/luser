@@ -22,14 +22,18 @@
       <el-date-picker v-model="userListQuery.userregsdate" class="filter-item" type="daterange" range-separator="-" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
       <el-input v-model="listQuery.title" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="listQuery.title" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <div>
+        <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+          查询
+        </el-button>
+        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+          分配
+        </el-button>
+      </div>
 
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
-        查询
-      </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
-        分配
-      </el-button>
-
+      <el-dialog title="分配" :visible.sync="assignVisible">
+        <assign :choose-user="selected" @allocationsucces="allocationsucces" />
+      </el-dialog>
     </div>
 
     <el-table
@@ -157,6 +161,7 @@
       <el-step title="不使用安全产品" description="100个" icon="el-icon-location" />
       <el-step title="不使用安全产品" description="100个" icon="el-icon-location" />
     </el-steps>
+    {{ selected }}
   </div>
 
 </template>
@@ -167,6 +172,8 @@ import { basicType, getBasic } from '@/api/basicData'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import assign from '@/views/arising/assign/index'
+import { Message } from 'element-ui'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -183,7 +190,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, assign },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -200,6 +207,7 @@ export default {
   },
   data() {
     return {
+      assignVisible: false,
       startBasicType: [
         basicType.PROVINCE,
         basicType.CITY,
@@ -274,6 +282,9 @@ export default {
     console.log(this.basices)
   },
   methods: {
+    allocationsucces() {
+      this.assignVisible = false
+    },
     handleSelection(val) {
       this.selected = val
     },
@@ -334,12 +345,15 @@ export default {
       }
     },
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      if (this.selected.length > 0) {
+        this.assignVisible = true
+      } else {
+        Message({
+          message: '请选择用户',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      }
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {

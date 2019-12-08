@@ -5,18 +5,22 @@
       <el-input v-model="sherchStr" placeholder="搜索" size="mini" style="margin:20px 0px;width:220px;" />
     </div>
     <el-radio-group v-model="chooseLable">
-      <el-radio v-for="item in sherchRadios" :key="item.id" :label="item.id" border>{{ item.name }}</el-radio>
+      <el-radio v-for="item in sherchRadios" :key="item.id" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.name }}</el-radio>
     </el-radio-group>
     <div style="margin:10px 0;">
-      <el-button type="primary">确定</el-button>
+      <el-button type="primary" @click="allocationsub">确定</el-button>
     </div>
 
   </div>
 </template>
 
 <script>
+import { allocation } from '@/api/handle'
+import { Message } from 'element-ui'
 export default {
+  name: 'Assign',
   components: { },
+  props: ['chooseUser'],
   data() {
     return {
       chooseLable: -1,
@@ -41,6 +45,11 @@ export default {
       })
 
       return d.length ? d[0] : {}
+    },
+    userides() {
+      return this.chooseUser.map((item) => {
+        return item.id
+      }).join(',')
     }
   },
   watch: {
@@ -54,8 +63,27 @@ export default {
     this.sherchRadios = this.radios
   },
   methods: {
-    tochange(e, val) {
-      console.log(e, val)
+    allocationsub() {
+      allocation({
+        registerno: this.userides,
+        reuserid: this.$store.state.user,
+        allocationinfo: {}
+      }).then(val => {
+        if (val.errorcode === 0) {
+          this.$emit('allocationsucces', '')
+          Message({
+            message: '提交成功',
+            type: 'success',
+            duration: 5 * 1000
+          })
+        } else {
+          Message({
+            message: '提交失败',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+      })
     }
   }
 }

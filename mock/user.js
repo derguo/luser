@@ -94,5 +94,25 @@ export default [
         data: 'success'
       }
     }
+  },
+
+  {
+    url: '/upcustomerstate',
+    type: 'post',
+    response: config => {
+      return {
+        errorcode: 0
+      }
+    }
+  },
+
+  {
+    url: '/upcustomerstate/allocation',
+    type: 'post',
+    response: config => {
+      return {
+        errorcode: 0
+      }
+    }
   }
 ]
