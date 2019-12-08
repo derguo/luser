@@ -64,9 +64,17 @@ export default {
   },
   methods: {
     allocationsub() {
+      if (!this.chooseData.name) {
+        Message({
+          message: '请选择一个员工',
+          type: 'error',
+          duration: 5 * 1000
+        })
+        return true
+      }
       allocation({
         registerno: this.userides,
-        reuserid: this.$store.state.user,
+        reuserid: this.$store.state.user.userid,
         allocationinfo: {}
       }).then(val => {
         if (val.errorcode === 0) {
