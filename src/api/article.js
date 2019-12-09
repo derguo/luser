@@ -6,8 +6,8 @@ export function fetchUsers(token, datas) {
     url: '/customProduct/GetProductLists',
     method: 'post',
     headers: {
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-      // 'Authorization': `bearer ${token}`
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
     },
     data: qs.stringify(datas)
   })
