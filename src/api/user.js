@@ -33,11 +33,23 @@ export function getInfo(token, username) {
     url: '/users/getbaseone',
     method: 'post',
     headers: {
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-      // 'Authorization': `bearer ${token}`
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
     },
     data: qs.stringify({ username })
     // ,params: { token }
+  })
+}
+
+export function customInfo(token, datas) {
+  return request({
+    url: '/customProduct/customInfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
   })
 }
 

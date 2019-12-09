@@ -8,7 +8,7 @@
       <el-select v-model="userListQuery.productid" placeholder="产品类型" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.products" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="userListQuery.stateid" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
+      <el-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.state" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
       <el-select v-model="userListQuery.rsuserid" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
@@ -32,7 +32,7 @@
         </el-button>
       </div>
 
-      <el-dialog title="分配" :visible.sync="assignVisible">
+      <el-dialog title="分配" :v-if="role" :visible.sync="assignVisible">
         <assign :choose-user="selected" @allocationsucces="allocationsucces" />
       </el-dialog>
     </div>
@@ -40,7 +40,7 @@
     <el-table
       :key="tableKey"
       v-loading="listLoading"
-      :data="list"
+      :data="nowPage"
       border
       fit
       highlight-current-row
@@ -104,7 +104,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" @pagination="PageTurning" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
@@ -200,6 +200,7 @@ export default {
   },
   data() {
     return {
+      role: this.$store.state.user.userInfo.authorid === 0,
       assignVisible: false,
       startBasicType: [
         basicType.PROVINCE,
@@ -208,15 +209,16 @@ export default {
         basicType.STATE,
         basicType.USERS
       ],
+      nowPage: [],
       basices: [],
       selected: [],
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
-      listLoading: true,
+      listLoading: false,
       userregdate: [],
       upgradedate: [],
-      stateinfo: null,
+      stateinfo: [],
       userListQuery: {
         provinceid: '',
         productid: '',
@@ -236,7 +238,7 @@ export default {
       },
       listQuery: {
         page: 1,
-        limit: 20,
+        limit: 30,
         importance: undefined,
         title: undefined,
         type: undefined,
@@ -288,6 +290,11 @@ export default {
     // console.log(this.basices)
   },
   methods: {
+    PageTurning({ page, limit }) {
+      console.log(page)
+      console.log((page - 1) * limit, page * limit)
+      this.nowPage = this.list.slice((page - 1) * limit, page * limit)
+    },
     allocationsucces() {
       this.assignVisible = false
     },
@@ -303,14 +310,15 @@ export default {
       }
     },
     getList() {
-      this.listLoading = false // -----------------------
+      this.listLoading = true // -----------------------
       fetchUsers(this.$store.state.user.token, this.userListQuery).then(response => {
-        console.log(response.data)
+        this.list = response.info
+        this.stateinfo = response.stateinfo
+        this.total = this.list.length
 
-        this.list = response.data.info
-        this.stateinfo = response.data.stateinfo
+        this.PageTurning({ page: 1, limit: 20 })
 
-        this.listLoading = true // -------------
+        this.listLoading = false // -------------
       })
     },
     handleFilter() {
@@ -376,7 +384,7 @@ export default {
     },
     handleUpdate(row) {
       this.$nextTick(() => {
-
+        this.$router.push({ path: `auser/index/${row.registerno}` })
       })
     },
     updateData() {
