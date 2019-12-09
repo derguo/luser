@@ -3,7 +3,7 @@ import qs from 'qs'
 
 export function allocation(data) {
   return request({
-    url: '/upcustomerstate/allocation',
+    url: '/customProduct/allocation',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'

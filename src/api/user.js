@@ -3,7 +3,7 @@ import qs from 'qs'
 
 export function login(data) {
   return request({
-    url: '/token',
+    url: '../token',
     method: 'post',
     headers: {
       'Access-Control-Request-Headers': 'content-type'
@@ -30,11 +30,11 @@ export function refreshToken(refresh_token) {
 export function getInfo(token, username) {
   console.log(qs.stringify({ username }), token)
   return request({
-    url: '/users/getone/',
+    url: '/users/getbaseone',
     method: 'post',
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `bearer ${token}`
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      // 'Authorization': `bearer ${token}`
     },
     data: qs.stringify({ username })
     // ,params: { token }

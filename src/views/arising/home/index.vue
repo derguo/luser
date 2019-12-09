@@ -1,27 +1,28 @@
 <template>
   <div class="app-container">
+    {{ userListQuery }}
     <div class="filter-container">
-      <el-select v-model="listQuery.importance" placeholder="用户省份" clearable style="width: 110px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      <el-select v-model="userListQuery.provinceid" placeholder="用户省份" clearable style="width: 110px" class="filter-item">
+        <el-option v-for="item in $store.state.user.province" :key="item.index" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="产品类型" clearable class="filter-item" style="width: 110px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
+      <el-select v-model="userListQuery.productid" placeholder="产品类型" clearable class="filter-item" style="width: 110px">
+        <el-option v-for="item in $store.state.user.products" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
+      <el-select v-model="userListQuery.stateid" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
+        <el-option v-for="item in $store.state.user.state" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="listQuery.type" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key" />
+      <el-select v-model="userListQuery.rsuserid" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
+        <el-option v-for="item in $store.state.user.users" :key="item.id" :label="item.cnname" :value="item.id" />
       </el-select>
-      <el-input v-model="listQuery.title" placeholder="单位全称" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.title" placeholder="用户ID" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.title" placeholder="联系人" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.title" placeholder="固定电话" style="width: 130px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.companyname" placeholder="单位全称" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.registerno" placeholder="用户ID" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.usercontactor" placeholder="联系人" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.usertelephone" placeholder="固定电话" style="width: 130px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-date-picker v-model="userListQuery.userregsdate" class="filter-item" type="daterange" range-separator="-" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
-      <el-date-picker v-model="userListQuery.userregsdate" class="filter-item" type="daterange" range-separator="-" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
-      <el-input v-model="listQuery.title" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.title" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy/MM/dd" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
+      <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy/MM/dd" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
+      <el-input v-model="userListQuery.prodmincount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.prodmaxcount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <div>
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
           查询
@@ -48,63 +49,56 @@
       @selection-change="handleSelection"
     >
       <el-table-column type="selection" align="center" />
-      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80" :class-name="getSortClass('id')">
+
+      <el-table-column label="跟进人" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.id }}</span>
+          <span>{{ row.rsusername }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
+
+      <el-table-column label="单位全称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.companyname }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Title" min-width="150px">
+
+      <el-table-column label="注册时间" align="center">
         <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-          <el-tag>{{ row.type | typeFilter }}</el-tag>
+          <span>{{ row.userregdate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110px" align="center">
+
+      <el-table-column label="最后升级时间" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.upgradedate }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showReviewer" label="Reviewer" width="110px" align="center">
+
+      <el-table-column label="授权点数" align="center">
         <template slot-scope="{row}">
-          <span style="color:red;">{{ row.reviewer }}</span>
+          <span>{{ row.prodcount1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Imp" width="80px">
+
+      <el-table-column label="用户省份" align="center">
         <template slot-scope="{row}">
-          <svg-icon v-for="n in + row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+          <span>{{ row.provincename }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Readings" align="center" width="95">
+
+      <el-table-column label="处理状态" align="center">
         <template slot-scope="{row}">
-          <span v-if="row.pageviews" class="link-type" @click="handleFetchPv(row.pageviews)">{{ row.pageviews }}</span>
-          <span v-else>0</span>
+          <span>{{ row.statename }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Status" class-name="status-col" width="100">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
+
       <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            Edit
-          </el-button>
-          <el-button v-if="row.status!='published'" size="mini" type="success" @click="handleModifyStatus(row,'published')">
-            Publish
+            详情
           </el-button>
           <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
-            Draft
-          </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(row,'deleted')">
-            Delete
+            变更
           </el-button>
         </template>
       </el-table-column>
@@ -156,10 +150,9 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
-    <el-steps :active="3" align-center>
-      <el-step title="不使用安全产品" description="100个" icon="el-icon-location" />
-      <el-step title="不使用安全产品" description="100个" icon="el-icon-location" />
-      <el-step title="不使用安全产品" description="100个" icon="el-icon-location" />
+
+    <el-steps :active="stateinfo.length" align-center>
+      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" />
     </el-steps>
     {{ selected }}
   </div>
@@ -167,7 +160,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import { fetchUsers, fetchPv, createArticle, updateArticle } from '@/api/article'
 import { basicType, getBasic } from '@/api/basicData'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
@@ -221,6 +214,9 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      userregdate: [],
+      upgradedate: [],
+      stateinfo: null,
       userListQuery: {
         provinceid: '',
         productid: '',
@@ -236,7 +232,7 @@ export default {
         upgradeedate: '',
         prodmincount1: '',
         prodmaxcount1: '',
-        userid: ''
+        userid: this.$store.state.user.userInfo.id
       },
       listQuery: {
         page: 1,
@@ -276,10 +272,20 @@ export default {
       downloadLoading: false
     }
   },
+  watch: {
+    userregdate(val) {
+      this.userListQuery.userregsdate = val[0]
+      this.userListQuery.userregedate = val[1]
+    },
+    upgradedate(val) {
+      this.userListQuery.upgradesdate = val[0]
+      this.userListQuery.upgradeedate = val[1]
+    }
+  },
   created() {
     this.getList()
-    this.getBasicAll()
-    console.log(this.basices)
+    // this.getBasicAll()
+    // console.log(this.basices)
   },
   methods: {
     allocationsucces() {
@@ -297,15 +303,14 @@ export default {
       }
     },
     getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      this.listLoading = false // -----------------------
+      fetchUsers(this.$store.state.user.token, this.userListQuery).then(response => {
+        console.log(response.data)
 
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.list = response.data.info
+        this.stateinfo = response.data.stateinfo
+
+        this.listLoading = true // -------------
       })
     },
     handleFilter() {
@@ -313,11 +318,7 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作Success',
-        type: 'success'
-      })
-      row.status = status
+
     },
     sortChange(data) {
       const { prop, order } = data
@@ -374,12 +375,8 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+
       })
     },
     updateData() {

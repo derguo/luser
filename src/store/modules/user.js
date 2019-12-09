@@ -10,7 +10,11 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
-  userInfo: {}
+  userInfo: {},
+  users: [],
+  province: [],
+  states: [],
+  products: []
 }
 
 const mutations = {
@@ -37,6 +41,18 @@ const mutations = {
   },
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
+  },
+  SET_USERS: (state, users) => {
+    state.users = users
+  },
+  SET_PROVINCE: (state, province) => {
+    state.province = province
+  },
+  SET_STATES: (state, states) => {
+    state.state = states
+  },
+  SET_PRODUCTS: (state, products) => {
+    state.products = products
   }
 }
 
@@ -69,7 +85,18 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { authorid, username, authorname } = info
+        const { province, products, states, users } = info
+
+        commit('SET_PROVINCE', province)
+        commit('SET_PRODUCTS', products)
+        commit('SET_STATES', states)
+        commit('SET_USERS', users)
+
+        const self = users.find((item) => {
+          return item.username === state.username
+        })
+
+        const { authorid, username, authorname } = self
         info.roles = [authorid]
 
         // roles must be a non-empty array
@@ -81,7 +108,7 @@ const actions = {
         commit('SET_NAME', username)
         commit('SET_AVATAR', 'http://www.rising.com.cn/skin/rising/index/img/200x200-rav.png')
         commit('SET_INTRODUCTION', authorname)
-        commit('SET_USERINFO', info)
+        commit('SET_USERINFO', self)
         resolve(info)
       }).catch(error => {
         reject(error)

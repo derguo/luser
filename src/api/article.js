@@ -1,4 +1,17 @@
 import request from '@/utils/request'
+import qs from 'qs'
+
+export function fetchUsers(token, datas) {
+  return request({
+    url: '/customProduct/GetProductLists',
+    method: 'post',
+    headers: {
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      // 'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
 
 export function fetchList(query) {
   return request({
