@@ -9,7 +9,7 @@
         <el-option v-for="item in $store.state.user.products" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
       <el-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
-        <el-option v-for="item in $store.state.user.state" :key="item.id" :label="item.name" :value="item.id" />
+        <el-option v-for="item in $store.state.user.states" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
       <el-select v-model="userListQuery.rsuserid" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.users" :key="item.id" :label="item.cnname" :value="item.id" />
@@ -384,7 +384,10 @@ export default {
     },
     handleUpdate(row) {
       this.$nextTick(() => {
-        this.$router.push({ path: `auser/index/${row.registerno}` })
+        this.$router.push({
+          path: `auser/index/${row.registerno}`,
+          query: row
+        })
       })
     },
     updateData() {

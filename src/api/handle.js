@@ -2,6 +2,7 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 export function allocation(token, data) {
+  console.log(token)
   console.log(data)
   return request({
     url: '/customProduct/allocation',

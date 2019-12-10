@@ -85,7 +85,7 @@ export const constantRoutes = [
         path: 'mainpage',
         component: () => import('@/views/arising/home/index'),
         name: 'Home',
-        meta: { title: 'home', icon: 'dashboard', affix: true, roles: ['0'] }
+        meta: { title: '用户列表', icon: 'dashboard', affix: true, roles: ['0'] }
       }
     ]
   }

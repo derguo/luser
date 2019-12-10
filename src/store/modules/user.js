@@ -49,7 +49,7 @@ const mutations = {
     state.province = province
   },
   SET_STATES: (state, states) => {
-    state.state = states
+    state.states = states
   },
   SET_PRODUCTS: (state, products) => {
     state.products = products

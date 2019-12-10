@@ -53,6 +53,19 @@ export function customInfo(token, datas) {
   })
 }
 
+export function chilstateinfo(token, datas) {
+  console.log(datas)
+  return request({
+    url: '/customProduct/chilstateinfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',
