@@ -41,6 +41,18 @@ export function getInfo(token, username) {
   })
 }
 
+export function customInfo(token, datas) {
+  return request({
+    url: '/customProduct/customInfo',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

@@ -5,7 +5,7 @@
       <el-input v-model="sherchStr" placeholder="搜索" size="mini" style="margin:20px 0px;width:220px;" />
     </div>
     <el-radio-group v-model="chooseLable">
-      <el-radio v-for="item in sherchRadios" :key="item.id" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.name }}</el-radio>
+      <el-radio v-for="item in sherchRadios" :key="item.id" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.cnname }}</el-radio>
     </el-radio-group>
     <div style="margin:10px 0;">
       <el-button type="primary" @click="allocationsub">确定</el-button>
@@ -25,16 +25,7 @@ export default {
     return {
       chooseLable: -1,
       sherchStr: '',
-      radios: [
-        { id: 1, name: 'tome' },
-        { id: 2, name: 'jjjjj' },
-        { id: 3, name: 'aaaa' },
-        { id: 4, name: 'dddd' },
-        { id: 5, name: 'ccc' },
-        { id: 6, name: '1111' },
-        { id: 7, name: 'tomeeee' },
-        { id: 8, name: 'c11' }
-      ],
+      radios: [],
       sherchRadios: []
     }
   },
@@ -48,23 +39,24 @@ export default {
     },
     userides() {
       return this.chooseUser.map((item) => {
-        return item.id
+        return item.registerno
       }).join(',')
     }
   },
   watch: {
     sherchStr(val) {
       this.sherchRadios = this.radios.filter((item) => {
-        return this.chooseData.id === item.id || item.name.indexOf(val) === 0
+        return this.chooseData.id === item.id || item.cnname.indexOf(val) === 0
       })
     }
   },
   created() {
+    this.radios = this.$store.state.user.users
     this.sherchRadios = this.radios
   },
   methods: {
     allocationsub() {
-      if (!this.chooseData.name) {
+      if (!this.chooseData.cnname) {
         Message({
           message: '请选择一个员工',
           type: 'error',
@@ -72,10 +64,10 @@ export default {
         })
         return true
       }
-      allocation({
+      allocation(this.$store.state.user.token, {
         registerno: this.userides,
-        reuserid: this.$store.state.user.userid,
-        allocationinfo: {}
+        rsuserid: this.chooseLable,
+        userid: this.$store.state.user.userInfo.id
       }).then(val => {
         if (val.errorcode === 0) {
           this.$emit('allocationsucces', '')

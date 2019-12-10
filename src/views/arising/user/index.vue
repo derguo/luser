@@ -87,7 +87,7 @@
 
 <script>
 import FollowUp from '@/views/arising/handle/FollowUp'
-
+import { customInfo } from '@/api/user'
 export default {
   components: {
     FollowUp
@@ -109,7 +109,11 @@ export default {
     }
   },
   created() {
-
+    console.log(this.$route.params.registerno)
+    customInfo(this.$store.state.user.token, { registerno: this.$route.params.registerno, userid: this.$store.state.user.userInfo.id })
+      .then(val => {
+        console.log(val.data)
+      })
   },
   methods: {
     handelCreate() {
