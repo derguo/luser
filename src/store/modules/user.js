@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { getBasic, basicType } from '@/api/basicData'
 
 const state = {
   token: getToken(),
@@ -14,7 +15,10 @@ const state = {
   users: [],
   province: [],
   states: [],
-  products: []
+  products: [],
+  region: [],
+  authorType: [],
+  industry: []
 }
 
 const mutations = {
@@ -53,10 +57,34 @@ const mutations = {
   },
   SET_PRODUCTS: (state, products) => {
     state.products = products
+  },
+  SET_REGION: (state, region) => {
+    state.region = region
+  },
+  SET_AUTHORTYPE: (state, authorType) => {
+    state.authorType = authorType
+  },
+  SET_INDUSTRY: (state, industry) => {
+    state.industry = industry
   }
 }
 
 const actions = {
+  getRegion({ commit, state, dispatch }) {
+    return getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 }).then(response => {
+      console.log('状态-------------', response)
+      if (state.states.length) {
+        state.states.forEach(item => {
+          response.info.forEach(i => {
+            if (i.aid === item.id) {
+              Object.assign(item, i)
+            }
+          })
+        })
+      }
+      console.log('更新状态-------------', state.states)
+    })
+  },
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo

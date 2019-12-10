@@ -27,6 +27,18 @@ export function refreshToken(refresh_token) {
   })
 }
 
+export function upCustomerState(token, datas) {
+  return request({
+    url: '/customProduct/UpCustomerState',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
+
 export function getInfo(token, username) {
   console.log(qs.stringify({ username }), token)
   return request({

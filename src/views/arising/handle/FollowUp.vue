@@ -2,14 +2,7 @@
   <el-form ref="fu" class="app-container">
     <el-form-item label="">
       <el-checkbox-group v-model="followdata.stateid">
-        <el-checkbox label="1">有待于跟进</el-checkbox>
-        <el-checkbox label="2">电话预约</el-checkbox>
-        <el-checkbox label="3">工商查询</el-checkbox>
-        <el-checkbox label="4">第三方管理</el-checkbox>
-        <el-checkbox label="5">百度搜索</el-checkbox>
-        <el-checkbox label="6">114查询电话</el-checkbox>
-        <el-checkbox label="7">上门拜访</el-checkbox>
-        <el-checkbox label="8">其他</el-checkbox>
+        <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :label="item.bid">{{ item.bname }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="有待跟进备注说明">
@@ -25,6 +18,7 @@
       <el-button @click="cancel">取消</el-button>
     </div>
   </el-form>
+
 </template>
 
 <script>
@@ -32,15 +26,32 @@ import { followUp } from '@/api/handle'
 import { Message } from 'element-ui'
 export default {
   name: 'FollowUp',
+  props: ['userinfo', 'parentstateid'],
   data() {
     return {
       followdata: {
-        registerno: '',
-        parentstateid: -1,
+        registerno: -1,
+        rsuserid: -1,
+        parentstateid: 3,
         stateid: [],
-        cerrentdesc: ''
+        cerrentdesc: '',
+        userid: -1
       }
     }
+  },
+  computed: {
+    statesinfo() {
+      return this.$store.state.user.states.find(item => {
+        return item.aid === this.parentstateid.toString()
+      })
+    }
+  },
+  created() {
+    console.log('==========', this.parentstateid)
+    this.followdata.registerno = this.userinfo.registerno
+    this.followdata.rsuserid = this.userinfo.rsuserid
+    this.followdata.parentstateid = this.parentstateid
+    this.followdata.userid = this.$store.state.user.userInfo.id
   },
   methods: {
     clearValidate() {
@@ -50,7 +61,8 @@ export default {
       this.followdata.cerrentdesc = ''
     },
     handleSub() {
-      followUp(this.followdata).then(
+      this.followdata.stateid = this.followdata.stateid.join(',')
+      followUp(this.$store.state.user.token, this.followdata).then(
         val => {
           if (val.errorcode === 0) {
             this.$emit('upsucces', '')

@@ -17,7 +17,7 @@ export function allocation(token, data) {
 
 export function followUp(token, data) {
   return request({
-    url: '/upcustomerstate',
+    url: 'customProduct/UpCustomerState',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

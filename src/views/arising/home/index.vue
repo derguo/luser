@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    {{ userListQuery }}
     <div class="filter-container">
       <el-select v-model="userListQuery.provinceid" placeholder="用户省份" clearable style="width: 110px" class="filter-item">
         <el-option v-for="item in $store.state.user.province" :key="item.index" :label="item.name" :value="item.id" />
@@ -19,8 +18,8 @@
       <el-input v-model="userListQuery.usercontactor" placeholder="联系人" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="userListQuery.usertelephone" placeholder="固定电话" style="width: 130px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy/MM/dd" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
-      <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy/MM/dd" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
+      <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.000" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
+      <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.000" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
       <el-input v-model="userListQuery.prodmincount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="userListQuery.prodmaxcount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <div>
@@ -154,7 +153,6 @@
     <el-steps :active="stateinfo.length" align-center>
       <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" />
     </el-steps>
-    {{ selected }}
   </div>
 
 </template>

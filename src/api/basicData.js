@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import qs from 'qs'
 
 export const basicType = {
   PROVINCE: 'province',
@@ -19,6 +20,6 @@ export function getBasic(token, type, data = {}) {
       'Content-Type': 'application/x-www-form-urlencoded',
       'Authorization': `bearer ${token}`
     },
-    data
+    data: qs.stringify(data)
   })
 }
