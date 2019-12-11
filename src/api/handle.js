@@ -27,21 +27,9 @@ export function followUp(token, data) {
   })
 }
 
-export function success(token, data) {
+export function upUserInfo(token, data) {
   return request({
-    url: '',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `bearer ${token}`
-    },
-    data: qs.stringify(data)
-  })
-}
-
-export function lose(token, data) {
-  return request({
-    url: '',
+    url: 'customProduct/UpCustomerInfo',
     method: 'post',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

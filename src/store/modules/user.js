@@ -14,6 +14,7 @@ const state = {
   userInfo: {},
   users: [],
   province: [],
+  city: [],
   states: [],
   products: [],
   region: [],
@@ -66,6 +67,9 @@ const mutations = {
   },
   SET_INDUSTRY: (state, industry) => {
     state.industry = industry
+  },
+  SET_CITY: (state, city) => {
+    state.city = city
   }
 }
 
@@ -83,6 +87,24 @@ const actions = {
         })
       }
       console.log('更新状态-------------', state.states)
+    })
+  },
+  getIndustry({ commit, state, dispatch }) {
+    return getBasic(state.token, basicType.INDUSTRY, { industryid: -1 }).then(response => {
+      console.log('行业--====-------------', response)
+      commit('SET_INDUSTRY', response.info)
+    })
+  },
+  getAuthorType({ commit, state, dispatch }) {
+    return getBasic(state.token, basicType.AUTHOR, { authorid: -1 }).then(response => {
+      console.log('级别--====-------------', response)
+      commit('SET_AUTHORTYPE', response.info)
+    })
+  },
+  getCity({ commit, state, dispatch }) {
+    return getBasic(state.token, basicType.CITY, { provinceid: -1 }).then(response => {
+      console.log('城市--====-------------', response)
+      commit('SET_CITY', response.info)
     })
   },
   // user login
