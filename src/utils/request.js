@@ -55,7 +55,6 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
   response => {
-    console.log('返回的数据', response)
     const res = response.data
 
     if (res.access_token) {

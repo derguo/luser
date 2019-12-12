@@ -159,7 +159,6 @@
 
 <script>
 import { fetchUsers, fetchPv, createArticle, updateArticle } from '@/api/article'
-import { basicType, getBasic } from '@/api/basicData'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -200,13 +199,6 @@ export default {
     return {
       role: this.$store.state.user.userInfo.authorid === 0,
       assignVisible: false,
-      startBasicType: [
-        basicType.PROVINCE,
-        basicType.CITY,
-        basicType.PRODUCT,
-        basicType.STATE,
-        basicType.USERS
-      ],
       nowPage: [],
       basices: [],
       selected: [],
@@ -284,13 +276,9 @@ export default {
   },
   created() {
     this.getList()
-    // this.getBasicAll()
-    // console.log(this.basices)
   },
   methods: {
     PageTurning({ page, limit }) {
-      console.log(page)
-      console.log((page - 1) * limit, page * limit)
       this.nowPage = this.list.slice((page - 1) * limit, page * limit)
     },
     allocationsucces() {
@@ -298,14 +286,6 @@ export default {
     },
     handleSelection(val) {
       this.selected = val
-    },
-    async getBasicAll() {
-      console.log('getBasicAll')
-      for (let t = 0; t < this.startBasicType.length; t++) {
-        console.log('getBasicAll', this.startBasicType[t])
-        const val = await getBasic(this.$store.state.user.token, this.startBasicType[t])
-        this.basices.push(val)
-      }
     },
     getList() {
       this.listLoading = true // -----------------------

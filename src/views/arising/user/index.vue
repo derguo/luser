@@ -151,7 +151,6 @@ export default {
   computed: {
     info1Array: function() {
       const temp = this.info1[0] ? JSON.parse(JSON.stringify(this.info1[0])) : {}
-      console.log('拷贝---', temp)
       this.info1.forEach((item) => {
         for (const key in item) {
           temp[key] = []
@@ -164,13 +163,11 @@ export default {
   watch: {
   },
   beforeCreate() {
-    console.log(this.$route.params.registerno)
     customInfo(this.$store.state.user.token,
       {
         registerno: this.$route.params.registerno,
         userid: this.$store.state.user.userInfo.id
       }).then(val => {
-      console.log('用户信息', val)
       this.userinfo = val.info[0]
       this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
       this.info1 = val.info1 ? val.info1 : []
@@ -179,7 +176,6 @@ export default {
       this.city = this.$store.state.user.city.find((item) => {
         return this.userinfo.provinceid === item.id
       }).city
-      console.log(this.city)
       this.loging = false
     })
     chilstateinfo(this.$store.state.user.token,
@@ -188,7 +184,6 @@ export default {
         registerno: this.$route.query.registerno,
         parentstateid: this.$route.query.stateid
       }).then(val => {
-      console.log('处理信息', val)
       this.chilstateinfo = val.info
     })
   },
@@ -244,7 +239,6 @@ export default {
       })
     },
     followupsuccess() {
-      console.log(this)
       this.dialogFormVisible = false
       this.dialogFormVisible1 = false
       this.dialogFormVisible2 = false

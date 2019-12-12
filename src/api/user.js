@@ -40,7 +40,6 @@ export function upCustomerState(token, datas) {
 }
 
 export function getInfo(token, username) {
-  console.log(qs.stringify({ username }), token)
   return request({
     url: '/users/getbaseone',
     method: 'post',
@@ -66,7 +65,6 @@ export function customInfo(token, datas) {
 }
 
 export function chilstateinfo(token, datas) {
-  console.log(datas)
   return request({
     url: '/customProduct/chilstateinfo',
     method: 'post',

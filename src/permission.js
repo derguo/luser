@@ -20,6 +20,7 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
+  console.log('判断是否存在token', hasToken)
 
   if (hasToken) {
     if (to.path === '/login') {

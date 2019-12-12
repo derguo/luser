@@ -76,7 +76,6 @@ const mutations = {
 const actions = {
   getRegion({ commit, state, dispatch }) {
     return getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 }).then(response => {
-      console.log('状态-------------', response)
       if (state.states.length) {
         state.states.forEach(item => {
           response.info.forEach(i => {
@@ -86,24 +85,20 @@ const actions = {
           })
         })
       }
-      console.log('更新状态-------------', state.states)
     })
   },
   getIndustry({ commit, state, dispatch }) {
     return getBasic(state.token, basicType.INDUSTRY, { industryid: -1 }).then(response => {
-      console.log('行业--====-------------', response)
       commit('SET_INDUSTRY', response.info)
     })
   },
   getAuthorType({ commit, state, dispatch }) {
     return getBasic(state.token, basicType.AUTHOR, { authorid: -1 }).then(response => {
-      console.log('级别--====-------------', response)
       commit('SET_AUTHORTYPE', response.info)
     })
   },
   getCity({ commit, state, dispatch }) {
     return getBasic(state.token, basicType.CITY, { provinceid: -1 }).then(response => {
-      console.log('城市--====-------------', response)
       commit('SET_CITY', response.info)
     })
   },

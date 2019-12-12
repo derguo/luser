@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Vue Element Admin',
+  title: '瑞星失联客户管理系统',
 
   /**
    * @type {boolean} true | false

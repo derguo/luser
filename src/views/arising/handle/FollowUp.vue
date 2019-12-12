@@ -47,7 +47,6 @@ export default {
     }
   },
   created() {
-    console.log('==========', this.parentstateid)
     this.followdata.registerno = this.userinfo.registerno
     this.followdata.rsuserid = this.userinfo.rsuserid
     this.followdata.parentstateid = this.parentstateid
