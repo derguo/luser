@@ -76,6 +76,18 @@ export function chilstateinfo(token, datas) {
   })
 }
 
+export function getCustomHandleState(token, datas) {
+  return request({
+    url: '/customProduct/GetCustomHandleState',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

@@ -1,12 +1,12 @@
-import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken } from '@/utils/auth'
+import { login, getInfo } from '@/api/user'
+import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken, setUserName, getUserName, removeUserName } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import { getBasic, basicType } from '@/api/basicData'
 
 const state = {
   token: getToken(),
   refresh_token: getRefreshToken(),
-  username: '',
+  username: getUserName(),
   name: '',
   avatar: '',
   introduction: '',
@@ -113,6 +113,7 @@ const actions = {
         commit('SET_USERNAME', username.trim())
         setToken(info.access_token, info.expires_in)
         setRefreshToken(info.refresh_token)
+        setUserName(username.trim())
         resolve()
       }).catch(error => {
         reject(error)
@@ -164,21 +165,35 @@ const actions = {
   // user logout
   logout({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
-        removeToken()
-        resetRouter()
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      removeToken()
+      removeRefreshToken()
+      removeUserName()
+      resetRouter()
 
-        // reset visited views and cached views
-        // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
-        dispatch('tagsView/delAllViews', null, { root: true })
+      // reset visited views and cached views
+      // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+      dispatch('tagsView/delAllViews', null, { root: true })
 
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      resolve()
     })
+    // return new Promise((resolve, reject) => {
+    //   logout(state.token).then(() => {
+    //     commit('SET_TOKEN', '')
+    //     commit('SET_ROLES', [])
+    //     removeToken()
+    //     resetRouter()
+
+    //     // reset visited views and cached views
+    //     // to fixed https://github.com/PanJiaChen/vue-element-admin/issues/2485
+    //     dispatch('tagsView/delAllViews', null, { root: true })
+
+    //     resolve()
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
   },
 
   // remove token

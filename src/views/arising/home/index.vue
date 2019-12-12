@@ -26,7 +26,7 @@
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
           查询
         </el-button>
-        <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+        <el-button v-if="$store.state.user.userInfo.assignment === '1'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
           分配
         </el-button>
       </div>
@@ -290,8 +290,8 @@ export default {
     getList() {
       this.listLoading = true // -----------------------
       fetchUsers(this.$store.state.user.token, this.userListQuery).then(response => {
-        this.list = response.info
-        this.stateinfo = response.stateinfo
+        this.list = response.info || []
+        this.stateinfo = response.stateinfo || []
         this.total = this.list.length
 
         this.PageTurning({ page: 1, limit: 20 })

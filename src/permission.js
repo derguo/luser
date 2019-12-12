@@ -11,7 +11,6 @@ NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login', '/auth-redirect'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
-  console.log('进入路由')
   // start progress bar
   NProgress.start()
 
@@ -20,9 +19,10 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log('判断是否存在token', hasToken)
+  console.log('进入路由,token===', hasToken)
 
   if (hasToken) {
+    console.log('有token，to.path===', to.path)
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })

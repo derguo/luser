@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loging" class="app-container">
-    <el-steps :active="chilstateinfo.length" align-center>
-      <el-step v-for="(index, item) in chilstateinfo" :key="index" :title="item.currentdesc" :description="item.addtime" icon="el-icon-location" />
+    <el-steps :active="customHandleState.length" align-center>
+      <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
     </el-steps>
     <div style="margin:10px 0;">
       <label>处理状态：</label>
@@ -123,7 +123,7 @@
 
 <script>
 import FollowUp from '@/views/arising/handle/FollowUp'
-import { customInfo, chilstateinfo } from '@/api/user'
+import { customInfo, chilstateinfo, getCustomHandleState } from '@/api/user'
 import editHistory from './editHistory.vue'
 import { upUserInfo } from '@/api/handle'
 import { Message } from 'element-ui'
@@ -144,6 +144,7 @@ export default {
       info1: [],
       startUserInfo: {},
       chilstateinfo: [],
+      customHandleState: [],
       sninfos: [],
       city: []
     }
@@ -184,7 +185,16 @@ export default {
         registerno: this.$route.query.registerno,
         parentstateid: this.$route.query.stateid
       }).then(val => {
-      this.chilstateinfo = val.info
+      this.chilstateinfo = val.info || []
+    })
+    getCustomHandleState(this.$store.state.user.token,
+      {
+        rsuserid: this.$route.query.rsuserid,
+        registerno: this.$route.query.registerno,
+        userid: this.$store.state.user.userInfo.id
+      }
+    ).then(val => {
+      this.customHandleState = val.info || []
     })
   },
   methods: {
