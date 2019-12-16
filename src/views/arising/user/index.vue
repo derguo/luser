@@ -127,6 +127,7 @@ import { customInfo, chilstateinfo, getCustomHandleState } from '@/api/user'
 import editHistory from './editHistory.vue'
 import { upUserInfo } from '@/api/handle'
 import { Message } from 'element-ui'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -152,9 +153,11 @@ export default {
   computed: {
     info1Array: function() {
       const temp = this.info1[0] ? JSON.parse(JSON.stringify(this.info1[0])) : {}
+      for (const key in temp) {
+        temp[key] = []
+      }
       this.info1.forEach((item) => {
         for (const key in item) {
-          temp[key] = []
           !item[key].toString().trim() || temp[key].push(item[key])
         }
       })
@@ -163,41 +166,85 @@ export default {
   },
   watch: {
   },
-  beforeCreate() {
-    customInfo(this.$store.state.user.token,
-      {
-        registerno: this.$route.params.registerno,
-        userid: this.$store.state.user.userInfo.id
-      }).then(val => {
-      this.userinfo = val.info[0]
-      this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
-      this.info1 = val.info1 ? val.info1 : []
+  async beforeCreate() {
+    try {
+      await this.$store.dispatch('user/getCity')
 
-      this.sninfos = val.sninfo
+      const custom = await customInfo(this.$store.state.user.token,
+        {
+          registerno: this.$route.params.registerno,
+          userid: this.$store.state.user.userInfo.id
+        })
+
+      this.userinfo = custom.info[0]
+      this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
+      this.info1 = custom.info1 ? custom.info1 : []
+
+      this.sninfos = custom.sninfo
       this.city = this.$store.state.user.city.find((item) => {
         return this.userinfo.provinceid === item.id
       }).city
+
+      const chilstate = chilstateinfo(this.$store.state.user.token,
+        {
+          rsuserid: this.$route.query.rsuserid,
+          registerno: this.$route.query.registerno,
+          parentstateid: this.$route.query.stateid
+        })
+
+      this.chilstateinfo = chilstate.info || []
+
+      const customHandleState = getCustomHandleState(this.$store.state.user.token,
+        {
+          rsuserid: this.$route.query.rsuserid,
+          registerno: this.$route.query.registerno,
+          userid: this.$store.state.user.userInfo.id
+        })
+
+      this.customHandleState = customHandleState.info || []
+
       this.loging = false
-    })
-    chilstateinfo(this.$store.state.user.token,
-      {
-        rsuserid: this.$route.query.rsuserid,
-        registerno: this.$route.query.registerno,
-        parentstateid: this.$route.query.stateid
-      }).then(val => {
-      this.chilstateinfo = val.info || []
-    })
-    getCustomHandleState(this.$store.state.user.token,
-      {
-        rsuserid: this.$route.query.rsuserid,
-        registerno: this.$route.query.registerno,
-        userid: this.$store.state.user.userInfo.id
-      }
-    ).then(val => {
-      this.customHandleState = val.info || []
-    })
+    } catch (error) {
+      throw new Error('基础数据获取有误')
+    }
+
+    // customInfo(this.$store.state.user.token,
+    //   {
+    //     registerno: this.$route.params.registerno,
+    //     userid: this.$store.state.user.userInfo.id
+    //   }).then(val => {
+    //   this.userinfo = val.info[0]
+    //   this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
+    //   this.info1 = val.info1 ? val.info1 : []
+
+    //   this.sninfos = val.sninfo
+    //   this.city = this.$store.state.user.city.find((item) => {
+    //     return this.userinfo.provinceid === item.id
+    //   }).city
+    //   this.loging = false
+    // })
+    // chilstateinfo(this.$store.state.user.token,
+    //   {
+    //     rsuserid: this.$route.query.rsuserid,
+    //     registerno: this.$route.query.registerno,
+    //     parentstateid: this.$route.query.stateid
+    //   }).then(val => {
+    //   this.chilstateinfo = val.info || []
+    // })
+    // getCustomHandleState(this.$store.state.user.token,
+    //   {
+    //     rsuserid: this.$route.query.rsuserid,
+    //     registerno: this.$route.query.registerno,
+    //     userid: this.$store.state.user.userInfo.id
+    //   }
+    // ).then(val => {
+    //   this.customHandleState = val.info || []
+    // })
   },
   methods: {
+    ...mapActions('user', [
+      'getCity'
+    ]),
     provinceChange(val) {
       console.log('改变区域：', val, arguments)
     },

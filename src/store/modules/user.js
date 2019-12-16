@@ -101,6 +101,7 @@ const actions = {
     if (state.city) {
       try {
         const response = await getBasic(state.token, basicType.CITY, { provinceid: -1 })
+        console.log('获得城市列表', response.info)
         commit('SET_CITY', response.info)
       } catch (error) {
         throw new Error('获取城市列表出错')
