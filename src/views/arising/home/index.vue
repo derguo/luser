@@ -18,8 +18,8 @@
       <el-input v-model="userListQuery.usercontactor" placeholder="联系人" style="width: 110px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="userListQuery.usertelephone" placeholder="固定电话" style="width: 130px;" class="filter-item" @keyup.enter.native="handleFilter" />
 
-      <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.000" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
-      <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.000" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
+      <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.SSS" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
+      <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.SSS" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
       <el-input v-model="userListQuery.prodmincount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="userListQuery.prodmaxcount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <div>
@@ -96,7 +96,7 @@
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             详情
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleModifyStatus(row,'draft')">
+          <el-button v-if="row.status!='draft'" size="mini" @click="handleUpdate(row)">
             变更
           </el-button>
         </template>
@@ -164,6 +164,7 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import assign from '@/views/arising/assign/index'
 import { Message } from 'element-ui'
+import moment from 'moment'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -206,22 +207,20 @@ export default {
       list: [],
       total: 0,
       listLoading: false,
-      userregdate: [],
-      upgradedate: [],
       stateinfo: [],
       userListQuery: {
         provinceid: '',
-        productid: '',
-        stateid: '',
+        productid: 'nver',
+        stateid: '-1',
         rsuserid: '',
         companyname: '',
         registerno: '',
         usercontactor: '',
         usertelephone: '',
-        userregsdate: '',
-        userregedate: '',
-        upgradesdate: '',
-        upgradeedate: '',
+        userregsdate: moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        userregedate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        upgradesdate: moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        upgradeedate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
         prodmincount1: '',
         prodmaxcount1: '',
         userid: this.$store.state.user.userInfo.id
@@ -264,15 +263,42 @@ export default {
       downloadLoading: false
     }
   },
-  watch: {
-    userregdate(val) {
-      this.userListQuery.userregsdate = val[0]
-      this.userListQuery.userregedate = val[1]
+  computed: {
+    userregdate: {
+      get() {
+        return (this.userListQuery.userregsdate && this.userListQuery.userregedate)
+          ? [
+            this.userListQuery.userregsdate,
+            this.userListQuery.userregedate
+          ]
+          : null
+      },
+      set(val) {
+        [
+          this.userListQuery.userregsdate,
+          this.userListQuery.userregedate
+        ] = val || ['', '']
+      }
     },
-    upgradedate(val) {
-      this.userListQuery.upgradesdate = val[0]
-      this.userListQuery.upgradeedate = val[1]
+    upgradedate: {
+      get() {
+        return (this.userListQuery.upgradesdate && this.userListQuery.upgradeedate)
+          ? [
+            this.userListQuery.upgradesdate,
+            this.userListQuery.upgradeedate
+          ]
+          : null
+      },
+      set(val) {
+        [
+          this.userListQuery.upgradesdate,
+          this.userListQuery.upgradeedate
+        ] = val || ['', '']
+      }
     }
+  },
+  watch: {
+
   },
   created() {
     this.getList()
@@ -337,7 +363,7 @@ export default {
       } else {
         Message({
           message: '请选择用户',
-          type: 'error',
+          type: 'warning',
           duration: 5 * 1000
         })
       }

@@ -97,10 +97,16 @@ const actions = {
       commit('SET_AUTHORTYPE', response.info)
     })
   },
-  getCity({ commit, state, dispatch }) {
-    return getBasic(state.token, basicType.CITY, { provinceid: -1 }).then(response => {
-      commit('SET_CITY', response.info)
-    })
+  async getCity({ commit, state }) {
+    if (state.city) {
+      try {
+        const response = await getBasic(state.token, basicType.CITY, { provinceid: -1 })
+        commit('SET_CITY', response.info)
+      } catch (error) {
+        throw new Error('获取城市列表出错')
+      }
+    }
+    return state.city
   },
   // user login
   login({ commit }, userInfo) {
@@ -232,9 +238,16 @@ const actions = {
   }
 }
 
+const getter = {
+  doneCity(state, getters) {
+    return state.city
+  }
+}
+
 export default {
   namespaced: true,
   state,
   mutations,
-  actions
+  actions,
+  getter
 }

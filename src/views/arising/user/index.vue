@@ -4,21 +4,21 @@
       <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
     </el-steps>
     <div style="margin:10px 0;">
-      <label>处理状态：</label>
+      <label width="110">处理状态：</label>
       <el-button type="" @click="handelCreate">有待跟进</el-button>
       <el-button type="" @click="handelCreate1">处理成功</el-button>
       <el-button type="" @click="handelCreate2">失败</el-button>
     </div>
-    <el-form ref="form" label-position="left" label-width="160px" size="mini">
+    <el-form ref="form" label-position="left" label-width="110px" size="mini">
       <el-form-item label="单位全称：">
         <el-input v-model="userinfo.companyname" style="width: 47%;" />
         <edit-history :source="info1Array.companyname" />
       </el-form-item>
       <el-form-item label="单位所属行业：">
-        <el-select v-model="userinfo.userindustryid" placeholder="请选择活动区域">
+        <el-select v-model="userinfo.userindustryid" placeholder="请选择活动区域" @change="provinceChange">
           <el-option v-for="item in $store.state.user.industry" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
-        <edit-history :source="info1Array.companyname" />
+        <edit-history :source="info1Array.userindustryid" />
       </el-form-item>
       <el-form-item label="单位所在地区：">
         <el-select v-model="userinfo.provinceid" placeholder="请选择省份" @change="changeprovince">
@@ -198,6 +198,9 @@ export default {
     })
   },
   methods: {
+    provinceChange(val) {
+      console.log('改变区域：', val, arguments)
+    },
     addUserInfodata() {
       this.userinfo.provincename = ' '
       this.userinfo.userindustryname = ' '
