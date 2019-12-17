@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="fu" class="app-container">
+  <el-form ref="fu" v-loading="loging" class="app-container">
     <el-form-item label="">
       <el-checkbox-group v-model="followdata.stateid">
         <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :label="item.bid">{{ item.bname }}</el-checkbox>
@@ -29,6 +29,7 @@ export default {
   props: ['userinfo', 'parentstateid'],
   data() {
     return {
+      loging: true,
       followdata: {
         registerno: -1,
         rsuserid: -1,
@@ -41,9 +42,19 @@ export default {
   },
   computed: {
     statesinfo() {
+      console.log('FollowUp computed')
       return this.$store.state.user.states.find(item => {
         return item.aid === this.parentstateid.toString()
-      })
+      }) || { children: [] }
+    }
+  },
+  async beforeCreate() {
+    this.loging = true
+    try {
+      await this.$store.dispatch('user/getRegion')
+      this.loging = false
+    } catch (error) {
+      throw new Error('获取状态有误')
     }
   },
   created() {

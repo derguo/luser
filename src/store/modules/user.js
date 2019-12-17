@@ -2,6 +2,7 @@ import { login, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken, setUserName, getUserName, removeUserName } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import { getBasic, basicType } from '@/api/basicData'
+import Vue from 'vue'
 
 const state = {
   token: getToken(),
@@ -74,23 +75,40 @@ const mutations = {
 }
 
 const actions = {
-  getRegion({ commit, state, dispatch }) {
-    return getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 }).then(response => {
-      if (state.states.length) {
-        state.states.forEach(item => {
-          response.info.forEach(i => {
-            if (i.aid === item.id) {
-              Object.assign(item, i)
-            }
+  async getRegion({ commit, state, dispatch }) {
+    console.log(state.states && state.states[0].children)
+    if (!(state.states && state.states[0].children)) {
+      try {
+        const response = await getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 })
+        console.log('获取状态列表', response.info)
+        if (state.states.length) {
+          state.states.forEach(item => {
+            response.info.forEach(i => {
+              if (i.aid === item.id) {
+                for (const k in i) {
+                  Vue.set(item, k, i[k])
+                }
+              }
+            })
           })
-        })
+        }
+      } catch (error) {
+        throw new Error('获取状态列表出错')
       }
-    })
+    }
+    return state.states
   },
-  getIndustry({ commit, state, dispatch }) {
-    return getBasic(state.token, basicType.INDUSTRY, { industryid: -1 }).then(response => {
-      commit('SET_INDUSTRY', response.info)
-    })
+  async getIndustry({ commit, state, dispatch }) {
+    if (state.industry) {
+      try {
+        const industryes = await getBasic(state.token, basicType.INDUSTRY, { industryid: -1 })
+        console.log('获取行业名称', industryes.info)
+        commit('SET_INDUSTRY', industryes.info)
+      } catch (error) {
+        throw new Error('获取行业名称出错')
+      }
+    }
+    return state.industry
   },
   getAuthorType({ commit, state, dispatch }) {
     return getBasic(state.token, basicType.AUTHOR, { authorid: -1 }).then(response => {

@@ -169,6 +169,7 @@ export default {
   async beforeCreate() {
     try {
       await this.$store.dispatch('user/getCity')
+      await this.$store.dispatch('user/getIndustry')
 
       const custom = await customInfo(this.$store.state.user.token,
         {
