@@ -142,7 +142,7 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import assign from '@/views/arising/assign/index'
 import { Message } from 'element-ui'
-import moment from 'moment'
+// import moment from 'moment'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -190,16 +190,16 @@ export default {
       userListQuery: {
         provinceid: '',
         productid: 'nver',
-        stateid: '-1',
+        stateid: '',
         rsuserid: '',
         companyname: '',
         registerno: '',
         usercontactor: '',
         usertelephone: '',
-        userregsdate: moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
-        userregedate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
-        upgradesdate: moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
-        upgradeedate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        userregsdate: '', // moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        userregedate: '', // moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        upgradesdate: '', // moment(new Date() - 7948800 * 1000).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        upgradeedate: '', // moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
         prodmincount1: '',
         prodmaxcount1: '',
         userid: this.$store.state.user.userInfo.id,
