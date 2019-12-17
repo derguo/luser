@@ -99,7 +99,7 @@ const actions = {
     return state.states
   },
   async getIndustry({ commit, state, dispatch }) {
-    if (state.industry) {
+    if (!state.industry.length) {
       try {
         const industryes = await getBasic(state.token, basicType.INDUSTRY, { industryid: -1 })
         console.log('获取行业名称', industryes.info)
@@ -110,13 +110,20 @@ const actions = {
     }
     return state.industry
   },
-  getAuthorType({ commit, state, dispatch }) {
-    return getBasic(state.token, basicType.AUTHOR, { authorid: -1 }).then(response => {
-      commit('SET_AUTHORTYPE', response.info)
-    })
+  async getAuthorType({ commit, state, dispatch }) {
+    if (!state.authorType.length) {
+      try {
+        const author = await getBasic(state.token, basicType.AUTHOR, { authorid: -1 })
+        commit('SET_AUTHORTYPE', author.info)
+      } catch (error) {
+        throw new Error('获取行业名称出错')
+      }
+    }
+    return state.authorType
   },
   async getCity({ commit, state }) {
-    if (state.city) {
+    console.log('getCity', !!state.city.length)
+    if (!state.city.length) {
       try {
         const response = await getBasic(state.token, basicType.CITY, { provinceid: -1 })
         console.log('获得城市列表', response.info)

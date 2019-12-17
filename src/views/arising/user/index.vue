@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loging" class="app-container">
-    <el-steps :active="customHandleState.length" align-center>
-      <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
+    <el-steps :active="chilstateinfo.length" align-center>
+      <el-step v-for="(item, index) in chilstateinfo" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
     </el-steps>
     <div style="margin:10px 0;">
       <label width="110">处理状态：</label>
@@ -170,6 +170,7 @@ export default {
     try {
       await this.$store.dispatch('user/getCity')
       await this.$store.dispatch('user/getIndustry')
+      await this.$store.dispatch('user/getAuthorType')
 
       const custom = await customInfo(this.$store.state.user.token,
         {
@@ -206,41 +207,12 @@ export default {
 
       this.loging = false
     } catch (error) {
-      throw new Error('基础数据获取有误')
+      Message({
+        message: '读取基础数据有误。请尝试刷新页面！',
+        type: 'warning',
+        duration: 5 * 1000
+      })
     }
-
-    // customInfo(this.$store.state.user.token,
-    //   {
-    //     registerno: this.$route.params.registerno,
-    //     userid: this.$store.state.user.userInfo.id
-    //   }).then(val => {
-    //   this.userinfo = val.info[0]
-    //   this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
-    //   this.info1 = val.info1 ? val.info1 : []
-
-    //   this.sninfos = val.sninfo
-    //   this.city = this.$store.state.user.city.find((item) => {
-    //     return this.userinfo.provinceid === item.id
-    //   }).city
-    //   this.loging = false
-    // })
-    // chilstateinfo(this.$store.state.user.token,
-    //   {
-    //     rsuserid: this.$route.query.rsuserid,
-    //     registerno: this.$route.query.registerno,
-    //     parentstateid: this.$route.query.stateid
-    //   }).then(val => {
-    //   this.chilstateinfo = val.info || []
-    // })
-    // getCustomHandleState(this.$store.state.user.token,
-    //   {
-    //     rsuserid: this.$route.query.rsuserid,
-    //     registerno: this.$route.query.registerno,
-    //     userid: this.$store.state.user.userInfo.id
-    //   }
-    // ).then(val => {
-    //   this.customHandleState = val.info || []
-    // })
   },
   methods: {
     ...mapActions('user', [

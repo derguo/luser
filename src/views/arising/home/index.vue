@@ -39,7 +39,7 @@
     <el-table
       :key="tableKey"
       v-loading="listLoading"
-      :data="nowPage"
+      :data="list"
       border
       fit
       highlight-current-row
@@ -48,6 +48,13 @@
       @selection-change="handleSelection"
     >
       <el-table-column type="selection" align="center" />
+
+      <el-table-column
+        type="index"
+        width="50"
+        label="NO."
+        align="center"
+      />
 
       <el-table-column label="跟进人" align="center">
         <template slot-scope="{row}">
@@ -87,7 +94,7 @@
 
       <el-table-column label="处理状态" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.statename }}</span>
+          <span :class="'statestyle'+row.stateid">{{ row.statename }}</span>
         </template>
       </el-table-column>
 
@@ -103,42 +110,13 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" @pagination="PageTurning" />
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="Type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date" />
-        </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;" />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea" placeholder="Please input" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          Cancel
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          Confirm
-        </el-button>
-      </div>
-    </el-dialog>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="currentpage"
+      :limit.sync="userListQuery.pagesize"
+      @pagination="getList"
+    />
 
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
@@ -151,7 +129,7 @@
     </el-dialog>
 
     <el-steps :active="stateinfo.length" align-center>
-      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" />
+      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" @click.native="test" />
     </el-steps>
   </div>
 
@@ -208,6 +186,7 @@ export default {
       total: 0,
       listLoading: false,
       stateinfo: [],
+      currentpage: 1,
       userListQuery: {
         provinceid: '',
         productid: 'nver',
@@ -223,7 +202,9 @@ export default {
         upgradeedate: moment(new Date()).format('YYYY-MM-DD HH:mm:ss.SSS'),
         prodmincount1: '',
         prodmaxcount1: '',
-        userid: this.$store.state.user.userInfo.id
+        userid: this.$store.state.user.userInfo.id,
+        currentpageindex: 0,
+        pagesize: 20
       },
       listQuery: {
         page: 1,
@@ -298,14 +279,16 @@ export default {
     }
   },
   watch: {
-
+    currentpage(val, oval) {
+      this.userListQuery.currentpageindex = (val - 1) * this.userListQuery.pagesize
+    }
   },
   created() {
     this.getList()
   },
   methods: {
-    PageTurning({ page, limit }) {
-      this.nowPage = this.list.slice((page - 1) * limit, page * limit)
+    test(env) {
+      console.log(env.target)
     },
     allocationsucces() {
       this.assignVisible = false
@@ -318,9 +301,7 @@ export default {
       fetchUsers(this.$store.state.user.token, this.userListQuery).then(response => {
         this.list = response.info || []
         this.stateinfo = response.stateinfo || []
-        this.total = this.list.length
-
-        this.PageTurning({ page: 1, limit: 20 })
+        this.total = response.count
 
         this.listLoading = false // -------------
       })
@@ -468,3 +449,21 @@ export default {
   }
 }
 </script>
+<style scoped>
+.statestyle-1{
+  color: #ccc;
+}
+.statestyle1{
+  color: blue;
+}
+.statestyle3{
+  color: rgb(225, 158, 53)
+}
+.statestyle5{
+  color: green
+}
+.statestyle7{
+  color: red
+}
+
+</style>

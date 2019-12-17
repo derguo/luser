@@ -39,7 +39,7 @@ router.beforeEach(async(to, from, next) => {
           const { roles } = await store.dispatch('user/getInfo')
           // store.dispatch('user/getRegion')
           // store.dispatch('user/getIndustry')
-          store.dispatch('user/getAuthorType')
+          // store.dispatch('user/getAuthorType')
           // store.dispatch('user/getCity')
 
           // generate accessible routes map based on roles

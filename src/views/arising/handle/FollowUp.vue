@@ -42,7 +42,6 @@ export default {
   },
   computed: {
     statesinfo() {
-      console.log('FollowUp computed')
       return this.$store.state.user.states.find(item => {
         return item.aid === this.parentstateid.toString()
       }) || { children: [] }
