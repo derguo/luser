@@ -113,7 +113,7 @@
     <pagination
       v-show="total>0"
       :total="total"
-      :page.sync="currentpage"
+      :page.sync="userListQuery.currentpageindex"
       :limit.sync="userListQuery.pagesize"
       @pagination="getList"
     />
@@ -186,7 +186,6 @@ export default {
       total: 0,
       listLoading: false,
       stateinfo: [],
-      currentpage: 1,
       userListQuery: {
         provinceid: '',
         productid: 'nver',
@@ -203,7 +202,7 @@ export default {
         prodmincount1: '',
         prodmaxcount1: '',
         userid: this.$store.state.user.userInfo.id,
-        currentpageindex: 0,
+        currentpageindex: 1,
         pagesize: 20
       },
       listQuery: {
@@ -279,9 +278,6 @@ export default {
     }
   },
   watch: {
-    currentpage(val, oval) {
-      this.userListQuery.currentpageindex = (val - 1) * this.userListQuery.pagesize
-    }
   },
   created() {
     this.getList()

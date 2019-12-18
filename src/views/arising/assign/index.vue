@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    {{ userides }}
     <div>将选中用户分配给：{{ chooseData.name || '' }}<span v-show="!chooseData.name" style="color:#ccc;">请选择</span></div>
     <div>
       <el-input v-model="sherchStr" placeholder="搜索" size="mini" style="margin:20px 0px;width:220px;" />
@@ -11,7 +10,6 @@
     <div style="margin:10px 0;">
       <el-button type="primary" @click="allocationsub">确定</el-button>
     </div>
-    {{ chooseData }}
   </div>
 </template>
 
