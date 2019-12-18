@@ -1,7 +1,7 @@
 <template>
   <div v-loading="loging" class="app-container">
-    <el-steps :active="chilstateinfo.length" align-center>
-      <el-step v-for="(item, index) in chilstateinfo" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
+    <el-steps :active="customHandleState.length" align-center>
+      <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
     </el-steps>
     <div style="margin:10px 0;">
       <label width="110">处理状态：</label>
@@ -123,7 +123,7 @@
 
 <script>
 import FollowUp from '@/views/arising/handle/FollowUp'
-import { customInfo, chilstateinfo, getCustomHandleState } from '@/api/user'
+import { customInfo, getCustomHandleState } from '@/api/user'
 import editHistory from './editHistory.vue'
 import { upUserInfo } from '@/api/handle'
 import { Message } from 'element-ui'
@@ -145,7 +145,6 @@ export default {
       userinfo: {},
       info1: [],
       startUserInfo: {},
-      chilstateinfo: [],
       customHandleState: [],
       sninfos: [],
       city: []
@@ -188,21 +187,7 @@ export default {
         return this.userinfo.provinceid === item.id
       }).city
 
-      const chilstate = chilstateinfo(this.$store.state.user.token,
-        {
-          rsuserid: this.$route.query.rsuserid,
-          registerno: this.$route.query.registerno,
-          parentstateid: this.$route.query.stateid
-        })
-
-      this.chilstateinfo = chilstate.info || []
-
-      const customHandleState = getCustomHandleState(this.$store.state.user.token,
-        {
-          rsuserid: this.$route.query.rsuserid,
-          registerno: this.$route.query.registerno,
-          userid: this.$store.state.user.userInfo.id
-        })
+      const customHandleState = await this.getCustomHandleState()
 
       this.customHandleState = customHandleState.info || []
 
@@ -219,6 +204,15 @@ export default {
     ...mapActions('user', [
       'getCity'
     ]),
+    async getCustomHandleState() {
+      const response = await getCustomHandleState(this.$store.state.user.token,
+        {
+          rsuserid: this.$route.query.rsuserid,
+          registerno: this.$route.query.registerno,
+          userid: this.$store.state.user.userInfo.id
+        })
+      return response
+    },
     provinceChange(val) {
       console.log('改变区域：', val, arguments)
     },
@@ -272,10 +266,13 @@ export default {
       this.$nextTick(() => {
       })
     },
-    followupsuccess() {
+    async followupsuccess() {
       this.dialogFormVisible = false
       this.dialogFormVisible1 = false
       this.dialogFormVisible2 = false
+
+      const customHandleState = await this.getCustomHandleState()
+      this.customHandleState = customHandleState.info || []
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <el-form ref="fu" v-loading="loging" class="app-container">
     <el-form-item label="">
-      <el-checkbox-group v-model="followdata.stateid">
+      <el-checkbox-group v-model="stateides">
         <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :label="item.bid">{{ item.bname }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
@@ -24,17 +24,21 @@
 <script>
 import { followUp } from '@/api/handle'
 import { Message } from 'element-ui'
+import { chilstateinfo } from '@/api/user'
+
 export default {
   name: 'FollowUp',
   props: ['userinfo', 'parentstateid'],
   data() {
     return {
       loging: true,
+      chilstateinfo: [],
+      stateides: [],
       followdata: {
         registerno: -1,
         rsuserid: -1,
         parentstateid: 3,
-        stateid: [],
+        stateid: '',
         cerrentdesc: '',
         userid: -1
       }
@@ -47,22 +51,42 @@ export default {
       }) || { children: [] }
     }
   },
-  async beforeCreate() {
+  watch: {
+    chilstateinfo(val) {
+      this.stateides = []
+      val.forEach(element => {
+        this.stateides.push(element.stateid)
+      })
+    }
+  },
+  beforeCreate() {
     this.loging = true
+  },
+  async created() {
+    this.followdata.registerno = this.userinfo.registerno
+    this.followdata.rsuserid = this.userinfo.rsuserid
+    this.followdata.parentstateid = this.parentstateid
+    this.followdata.userid = this.$store.state.user.userInfo.id
+
     try {
       await this.$store.dispatch('user/getRegion')
+      this.chilstateinfo = await this.getChilstateInfo()
       this.loging = false
     } catch (error) {
       throw new Error('获取状态有误')
     }
   },
-  created() {
-    this.followdata.registerno = this.userinfo.registerno
-    this.followdata.rsuserid = this.userinfo.rsuserid
-    this.followdata.parentstateid = this.parentstateid
-    this.followdata.userid = this.$store.state.user.userInfo.id
-  },
   methods: {
+    async getChilstateInfo() {
+      const chilstate = await chilstateinfo(this.$store.state.user.token,
+        {
+          rsuserid: this.$route.query.rsuserid,
+          registerno: this.$route.query.registerno,
+          parentstateid: this.parentstateid
+        })
+
+      return chilstate.info
+    },
     clearValidate() {
       this.followdata.registerno = ''
       this.followdata.parentstateid = -1
@@ -70,23 +94,28 @@ export default {
       this.followdata.cerrentdesc = ''
     },
     handleSub() {
-      this.followdata.stateid = this.followdata.stateid.join(',')
+      this.loging = true
+      this.followdata.stateid = this.stateides.join(',')
       followUp(this.$store.state.user.token, this.followdata).then(
-        val => {
+        async val => {
           if (val.errorcode === 0) {
-            this.$emit('upsucces', '')
+            this.followdata.stateid = ''
+            await this.getChilstateInfo()
+            this.loging = false
             Message({
               message: '提交成功',
               type: 'success',
               duration: 5 * 1000
             })
           } else {
+            this.loging = false
             Message({
               message: '提交失败',
               type: 'error',
               duration: 5 * 1000
             })
           }
+          this.$emit('upsucces', '')
         }
       )
     },
