@@ -130,6 +130,7 @@ import { Message } from 'element-ui'
 import { mapActions } from 'vuex'
 
 export default {
+  name: 'Auser',
   components: {
     FollowUp,
     editHistory
@@ -180,7 +181,7 @@ export default {
 
       this.userinfo = custom.info[0]
       this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
-      this.info1 = custom.info1 ? custom.info1 : []
+      this.info1 = custom.info1 || []
 
       this.sninfos = custom.sninfo
       this.city = this.$store.state.user.city.find((item) => {

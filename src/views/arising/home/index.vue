@@ -129,7 +129,7 @@
     </el-dialog>
 
     <el-steps :active="stateinfo.length" align-center>
-      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" @click.native="test" />
+      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" />
     </el-steps>
   </div>
 
@@ -158,7 +158,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
-  name: 'ComplexTable',
+  name: 'Home',
   components: { Pagination, assign },
   directives: { waves },
   filters: {
@@ -283,9 +283,6 @@ export default {
     this.getList()
   },
   methods: {
-    test(env) {
-      console.log(env.target)
-    },
     allocationsucces() {
       this.assignVisible = false
     },
@@ -303,7 +300,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.userListQuery.currentpageindex = 1
       this.getList()
     },
     handleModifyStatus(row, status) {

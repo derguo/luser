@@ -70,8 +70,8 @@ export const constantRoutes = [
       {
         path: 'index/:registerno',
         component: () => import('@/views/arising/user/index'),
-        name: 'auser----',
-        meta: { title: 'auser', icon: 'icon', noCache: true }
+        name: 'Auser',
+        meta: { title: '用户详情', icon: 'icon', noCache: false }
       }
     ],
     hidden: true
@@ -85,7 +85,7 @@ export const constantRoutes = [
         path: 'mainpage',
         component: () => import('@/views/arising/home/index'),
         name: 'Home',
-        meta: { title: '用户列表', icon: 'peoples', affix: true, roles: ['0'] }
+        meta: { title: '用户列表', icon: 'peoples', noCache: false, affix: true, roles: ['0'] }
       }
     ]
   }
