@@ -1,11 +1,12 @@
 <template>
   <el-form ref="fu" v-loading="loging" class="app-container">
+    {{ statesinfo.children }}
     <el-form-item label="">
       <el-checkbox-group v-model="stateides">
-        <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :label="item.bid">{{ item.bname }}</el-checkbox>
+        <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :disabled="item.disabled" :label="item.bid">{{ item.bname }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-    <el-form-item label="有待跟进备注说明">
+    <el-form-item label="备注说明">
       <el-input
         v-model="followdata.cerrentdesc"
         type="textarea"
@@ -53,9 +54,12 @@ export default {
   },
   watch: {
     chilstateinfo(val) {
-      this.stateides = []
       val.forEach(element => {
-        this.stateides.push(element.stateid)
+        const sinfo = this.statesinfo.children.find(item => {
+          return item.bid === element.stateid
+        })
+        sinfo || this.$set(sinfo, 'disabled', true)
+        // this.stateides.push(element.stateid)
       })
     }
   },

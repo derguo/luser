@@ -56,54 +56,54 @@
         align="center"
       />
 
-      <el-table-column label="跟进人" align="center">
+      <el-table-column label="跟进人" width="90" align="center">
         <template slot-scope="{row}">
           <span>{{ row.rsusername }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="单位全称" align="center">
+      <el-table-column label="单位全称" min-width="250" align="center">
         <template slot-scope="{row}">
           <span>{{ row.companyname }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="注册时间" align="center">
+      <el-table-column label="注册时间" min-width="170" align="center">
         <template slot-scope="{row}">
           <span>{{ row.userregdate }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="最后升级时间" align="center">
+      <el-table-column label="最后升级时间" min-width="170" align="center">
         <template slot-scope="{row}">
           <span>{{ row.upgradedate }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="授权点数" align="center">
+      <el-table-column label="授权点数" width="90" align="center">
         <template slot-scope="{row}">
           <span>{{ row.prodcount1 }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="用户省份" align="center">
+      <el-table-column label="用户省份" width="90" align="center">
         <template slot-scope="{row}">
           <span>{{ row.provincename }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="处理状态" align="center">
+      <el-table-column label="处理状态" width="120" align="center">
         <template slot-scope="{row}">
           <span :class="'statestyle'+row.stateid">{{ row.statename }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="Actions" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="90" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             详情
           </el-button>
-          <el-button v-if="row.status!='draft'" size="mini" @click="handleUpdate(row)">
+          <el-button v-if="false" size="mini" @click="handleUpdate(row)">
             变更
           </el-button>
         </template>

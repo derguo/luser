@@ -80,7 +80,6 @@ const actions = {
     if (!(state.states && state.states[0].children)) {
       try {
         const response = await getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 })
-        console.log('获取状态列表', response.info)
         if (state.states.length) {
           state.states.forEach(item => {
             response.info.forEach(i => {
@@ -102,7 +101,6 @@ const actions = {
     if (!state.industry.length) {
       try {
         const industryes = await getBasic(state.token, basicType.INDUSTRY, { industryid: -1 })
-        console.log('获取行业名称', industryes.info)
         commit('SET_INDUSTRY', industryes.info)
       } catch (error) {
         throw new Error('获取行业名称出错')
@@ -122,11 +120,9 @@ const actions = {
     return state.authorType
   },
   async getCity({ commit, state }) {
-    console.log('getCity', !!state.city.length)
     if (!state.city.length) {
       try {
         const response = await getBasic(state.token, basicType.CITY, { provinceid: -1 })
-        console.log('获得城市列表', response.info)
         commit('SET_CITY', response.info)
       } catch (error) {
         throw new Error('获取城市列表出错')

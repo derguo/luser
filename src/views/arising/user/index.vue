@@ -4,12 +4,15 @@
       <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
     </el-steps>
     <div style="margin:10px 0;">
-      <label width="110">处理状态：</label>
+      <label style="display:inline-block;width:108px">处理状态： </label>
       <el-button type="" @click="handelCreate">有待跟进</el-button>
       <el-button type="" @click="handelCreate1">处理成功</el-button>
       <el-button type="" @click="handelCreate2">失败</el-button>
     </div>
     <el-form ref="form" label-position="left" label-width="110px" size="mini">
+      <el-form-item label="客户注册码：">
+        <div>{{ userinfo.registerno }}</div>
+      </el-form-item>
       <el-form-item label="单位全称：">
         <el-input v-model="userinfo.companyname" style="width: 47%;" />
         <edit-history :source="info1Array.companyname" />

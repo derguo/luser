@@ -5,7 +5,7 @@
       <el-input v-model="sherchStr" placeholder="搜索" size="mini" style="margin:20px 0px;width:220px;" />
     </div>
     <el-radio-group v-model="chooseLable">
-      <el-radio v-for="item in sherchRadios" :key="item.id" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.cnname }}</el-radio>
+      <el-radio v-for="item in sherchRadios" :key="item.id" :disabled="item.authorid < 15" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.cnname }}</el-radio>
     </el-radio-group>
     <div style="margin:10px 0;">
       <el-button type="primary" @click="allocationsub">确定</el-button>
@@ -16,6 +16,7 @@
 <script>
 import { allocation } from '@/api/handle'
 import { Message } from 'element-ui'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Assign',
   components: { },
@@ -29,6 +30,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['roles']),
     chooseData() {
       const d = this.radios.filter((item) => {
         return this.chooseLable === item.id

@@ -19,10 +19,9 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log('进入路由,token===', hasToken)
 
   if (hasToken) {
-    console.log('有token，to.path===', to.path)
+    console.log('有token')
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
