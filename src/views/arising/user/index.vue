@@ -21,7 +21,7 @@
         <edit-history :source="info1Array.userindustryid" />
       </el-form-item>
       <el-form-item label="单位所在地区：">
-        <el-select v-model="userinfo.provinceid" placeholder="请选择省份" @change="changeprovince">
+        <el-select v-model="userinfo.provinceid" placeholder="请选择省份" @change="provinceChange">
           <el-option v-for="item in $store.state.user.province" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <edit-history :source="info1Array.provinceid" />
@@ -127,7 +127,7 @@ import { customInfo, getCustomHandleState } from '@/api/user'
 import editHistory from './editHistory.vue'
 import { upUserInfo } from '@/api/handle'
 import { Message } from 'element-ui'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Auser',
@@ -141,18 +141,28 @@ export default {
       dialogFormVisible: false,
       dialogFormVisible2: false,
       dialogFormVisible1: false,
-      importanceOptions: [1, 2, 3],
       userinfo: {},
       info1: [],
       startUserInfo: {},
       customHandleState: [],
-      sninfos: [],
-      city: []
+      sninfos: []
     }
   },
   computed: {
+    ...mapGetters({
+      citys: 'citys',
+      industry: 'industry'
+    }),
+    city() {
+      const c = this.citys.find(item => {
+        return item.id === this.userinfo.provinceid
+      })
+      return c ? c.city : []
+    },
     info1Array: function() {
-      const temp = this.info1[0] ? JSON.parse(JSON.stringify(this.info1[0])) : {}
+      if (!this.info1[0]) { return {} }
+
+      const temp = JSON.parse(JSON.stringify(this.info1[0]))
       for (const key in temp) {
         temp[key] = []
       }
@@ -161,32 +171,29 @@ export default {
           !item[key].toString().trim() || temp[key].push(item[key])
         }
       })
+      temp.userindustryid = temp.userindustryid.map(item => { return this.finedIndustryName(item) })
+      temp.provinceid = temp.provinceid.map(item => { return this.finedProvinceName(item) })
+      temp.usercityid = temp.usercityid.map(item => { return this.finedCityName(item) })
       return temp
+    },
+    selectedProvinceName() {
+      return this.finedProvinceName(this.userinfo.provinceid)
+    },
+    selectedCityName() {
+      return this.finedCityName(this.userinfo.usercityid)
+    },
+    selectIndustryName() {
+      return this.finedIndustryName(this.userinfo.userindustryid)
     }
   },
   watch: {
   },
-  async beforeCreate() {
+  async created() {
     try {
       await this.$store.dispatch('user/getCity')
       await this.$store.dispatch('user/getIndustry')
       await this.$store.dispatch('user/getAuthorType')
-
-      const custom = await customInfo(this.$store.state.user.token,
-        {
-          registerno: this.$route.params.registerno,
-          userid: this.$store.state.user.userInfo.id
-        })
-
-      this.userinfo = custom.info[0]
-      this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
-      this.info1 = custom.info1 || []
-
-      this.sninfos = custom.sninfo
-      this.city = this.$store.state.user.city.find((item) => {
-        return this.userinfo.provinceid === item.id
-      }).city
-
+      await this.getCustom()
       const customHandleState = await this.getCustomHandleState()
 
       this.customHandleState = customHandleState.info || []
@@ -204,6 +211,38 @@ export default {
     ...mapActions('user', [
       'getCity'
     ]),
+    async getCustom() {
+      const custom = await customInfo(this.$store.state.user.token,
+        {
+          registerno: this.$route.params.registerno,
+          userid: this.$store.state.user.userInfo.id
+        })
+
+      this.userinfo = custom.info[0]
+      this.startUserInfo = JSON.parse(JSON.stringify(this.userinfo))
+      this.info1 = custom.info1 || []
+
+      this.sninfos = custom.sninfo
+      return custom
+    },
+    finedProvinceName(provinceid) {
+      const p = this.citys.find(item => {
+        return provinceid === item.id
+      })
+      return p ? p.name : ''
+    },
+    finedCityName(cityid) {
+      const c = this.city.find(item => {
+        return item.cid === cityid
+      })
+      return c ? c.cname : ''
+    },
+    finedIndustryName(industryid) {
+      const i = this.industry.find(item => {
+        return item.id === industryid
+      })
+      return i ? i.name : ''
+    },
     async getCustomHandleState() {
       const response = await getCustomHandleState(this.$store.state.user.token,
         {
@@ -214,17 +253,58 @@ export default {
       return response
     },
     provinceChange(val) {
-      console.log('改变区域：', val, arguments)
+      this.userinfo.usercityid = ''
     },
     addUserInfodata() {
-      this.userinfo.provincename = ' '
-      this.userinfo.userindustryname = ' '
-      this.userinfo.usercityname = ' '
+      this.userinfo.provincename = this.selectedProvinceName
+      this.userinfo.userindustryname = this.selectIndustryName
+      this.userinfo.usercityname = this.selectedCityName
       this.userinfo.userid = this.$store.state.user.userInfo.id
     },
+    submitData() {
+      let s = false
+      const temp = {}
+      temp.provincename = ''
+      temp.userindustryname = ''
+      temp.usercityname = ''
+      temp.userid = this.$store.state.user.userInfo.id
+      for (const key in this.userinfo) {
+        console.log(this.startUserInfo[key], this.userinfo[key])
+        if (this.startUserInfo[key] === this.userinfo[key]) {
+          temp[key] = ''
+        } else {
+          s = true
+          temp[key] = this.userinfo[key]
+          switch (key) {
+            case 'provinceid':
+              temp.provincename = this.selectedProvinceName
+              break
+            case 'userindustryid':
+              temp.userindustryname = this.selectIndustryName
+              break
+            case 'usercityid':
+              temp.usercityname = this.selectedCityName
+              break
+            default:
+              break
+          }
+        }
+      }
+      temp.registerno = this.userinfo.registerno
+      return s && temp
+    },
     changeUser() {
+      const sd = this.submitData()
+      if (!sd) {
+        Message({
+          message: '没有修改！',
+          type: 'warning',
+          duration: 5 * 1000
+        })
+        return
+      }
       this.addUserInfodata()
-      upUserInfo(this.$store.state.user.token, this.userinfo).then(
+      upUserInfo(this.$store.state.user.token, sd).then(
         val => {
           if (val.errorcode === 0) {
             Message({
@@ -244,12 +324,6 @@ export default {
     },
     reset() {
       this.userinfo = JSON.parse(JSON.stringify(this.startUserInfo))
-      this.changeprovince()
-    },
-    changeprovince() {
-      this.city = this.$store.state.user.city.find((item) => {
-        return this.userinfo.provinceid === item.id
-      }).city
     },
     handelCreate() {
       this.dialogFormVisible = true

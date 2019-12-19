@@ -20,7 +20,7 @@
 
       <el-date-picker v-model="userregdate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.SSS" start-placeholder="注册开始日期" end-placeholder="注册结束日期" />
       <el-date-picker v-model="upgradedate" class="filter-item" type="daterange" range-separator="-" value-format="yyyy-MM-dd HH:mm:ss.SSS" start-placeholder="升级开始日期" end-placeholder="升级结束日期" />
-      <el-input v-model="userListQuery.prodmincount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="userListQuery.prodmincount1" placeholder="授权点数上限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-input v-model="userListQuery.prodmaxcount1" placeholder="授权点数下限" style="width: 120px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <div>
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
