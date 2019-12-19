@@ -294,6 +294,7 @@ export default {
         }
       }
       temp.registerno = this.userinfo.registerno
+      temp.stateid = this.userinfo.stateid
       return s && temp
     },
     changeUser() {
@@ -306,7 +307,6 @@ export default {
         })
         return
       }
-      this.addUserInfodata()
       upUserInfo(this.$store.state.user.token, sd).then(
         val => {
           if (val.errorcode === 0) {
