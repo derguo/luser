@@ -1,6 +1,5 @@
 <template>
   <el-form ref="fu" v-loading="loging" class="app-container">
-    {{ statesinfo.children }}
     <el-form-item label="">
       <el-checkbox-group v-model="stateides">
         <el-checkbox v-for="item in statesinfo.children" :key="item.bid" :disabled="item.disabled" :label="item.bid">{{ item.bname }}</el-checkbox>
@@ -58,7 +57,8 @@ export default {
         const sinfo = this.statesinfo.children.find(item => {
           return item.bid === element.stateid
         })
-        sinfo || this.$set(sinfo, 'disabled', true)
+        console.log(sinfo.bid)
+        sinfo && this.$set(sinfo, 'disabled', true)
         // this.stateides.push(element.stateid)
       })
     }
@@ -105,6 +105,7 @@ export default {
           if (val.errorcode === 0) {
             this.followdata.stateid = ''
             await this.getChilstateInfo()
+            this.stateides = []
             this.loging = false
             Message({
               message: '提交成功',

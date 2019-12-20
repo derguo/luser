@@ -295,6 +295,7 @@ export default {
       }
       temp.registerno = this.userinfo.registerno
       temp.stateid = this.userinfo.stateid
+      delete temp.id
       return s && temp
     },
     changeUser() {
@@ -315,6 +316,7 @@ export default {
               type: 'success',
               duration: 5 * 1000
             })
+            this.getCustom()
           } else {
             Message({
               message: '提交失败',
