@@ -211,7 +211,6 @@ export default {
   watch: {
   },
   async created() {
-    console.log('用户页面路由：', this.$route.params.id)
     try {
       await this.$store.dispatch('user/getCity')
       await this.$store.dispatch('user/getIndustry')
@@ -220,6 +219,13 @@ export default {
       const customHandleState = await this.getCustomHandleState()
 
       this.customHandleState = customHandleState.info || []
+
+      this.$nextTick(() => {
+        this.$store.dispatch(
+          'tagsView/changeTitle',
+          { route: this.$route, title: this.userinfo.companyname }
+        )
+      })
 
       this.loging = false
     } catch (error) {

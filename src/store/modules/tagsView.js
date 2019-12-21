@@ -4,6 +4,13 @@ const state = {
 }
 
 const mutations = {
+  CHANGE_VISITED_VIEW_TITLE: (state, view) => {
+    state.visitedViews.forEach(v => {
+      if (v.path === view.route.path) {
+        v.title = view.title
+      }
+    })
+  },
   ADD_VISITED_VIEW: (state, view) => {
     if (state.visitedViews.some(v => v.path === view.path)) return
     state.visitedViews.push(
@@ -67,6 +74,9 @@ const mutations = {
 }
 
 const actions = {
+  changeTitle({ commit }, view) {
+    commit('CHANGE_VISITED_VIEW_TITLE', view)
+  },
   addView({ dispatch }, view) {
     dispatch('addVisitedView', view)
     dispatch('addCachedView', view)
