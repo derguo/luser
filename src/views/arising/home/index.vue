@@ -7,7 +7,7 @@
       <el-select v-model="userListQuery.productid" placeholder="产品类型" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.products" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 110px">
+      <el-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 120px">
         <el-option v-for="item in $store.state.user.states" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
       <el-select v-model="userListQuery.rsuserid" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
@@ -127,9 +127,40 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
-
     <el-steps :active="stateinfo.length" align-center>
-      <el-step v-for="item in stateinfo" :key="item.stateid" :title="item.statename" :description="item.num+'个'" icon="el-icon-location" />
+      <el-step
+        v-for="(item, index) in stateinfo"
+        :key="item.stateid + index + ''"
+        icon="el-icon-location"
+        @click.native="getStepList(item)"
+      >
+        <template v-slot:title>
+          <el-popover
+            :disabled="!(item.substateinfo || []).length"
+            placement="top"
+            trigger="hover"
+            :width="$el.scrollWidth - 20"
+          >
+            <el-steps :active="(item.substateinfo || []).length" align-center>
+              <el-step
+                v-for="(sitem, sindex) in item.substateinfo"
+                :key="sindex"
+                :description="sitem.num+'个'"
+                :title="sitem.statename"
+                icon="el-icon-location"
+                style="cursor: pointer;"
+                @click.native="getStepList(sitem)"
+              />
+            </el-steps>
+            <div slot="reference" style="cursor: pointer;">
+              <div>{{ item.statename }}</div>
+              <div style="font-size:12px;line-height:12px;cursor: pointer;">
+                {{ item.num+'个' }}
+              </div>
+            </div>
+          </el-popover>
+        </template>
+      </el-step>
     </el-steps>
   </div>
 
@@ -283,6 +314,10 @@ export default {
     this.getList()
   },
   methods: {
+    getStepList(val) {
+      this.userListQuery.stateid = val.stateid
+      this.getList()
+    },
     allocationsucces() {
       this.assignVisible = false
     },
@@ -290,13 +325,13 @@ export default {
       this.selected = val
     },
     getList() {
-      this.listLoading = true // -----------------------
+      this.listLoading = true
       fetchUsers(this.$store.state.user.token, this.userListQuery).then(response => {
         this.list = response.info || []
         this.stateinfo = response.stateinfo || []
         this.total = response.count
 
-        this.listLoading = false // -------------
+        this.listLoading = false
       })
     },
     handleFilter() {

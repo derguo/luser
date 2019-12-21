@@ -57,7 +57,6 @@ export default {
         const sinfo = this.statesinfo.children.find(item => {
           return item.bid === element.stateid
         })
-        console.log(sinfo.bid)
         sinfo && this.$set(sinfo, 'disabled', true)
         // this.stateides.push(element.stateid)
       })

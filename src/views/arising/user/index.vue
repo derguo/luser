@@ -1,8 +1,27 @@
 <template>
   <div v-loading="loging" class="app-container">
-    <el-steps :active="customHandleState.length" align-center>
-      <el-step v-for="(item, index) in customHandleState" :key="index" :title="'[' + $route.query.rsusername + ']' + item.statename" :description="item.addtime" icon="el-icon-location" />
-    </el-steps>
+    <el-tabs :active-name="'state' + userinfo.stateid">
+      <el-tab-pane
+        v-for="(item, index) in customHandleState"
+        :key="index"
+        :label="item.statename"
+        :name="'state'+item.stateid"
+      >
+        <el-steps :active="item.recordinfo.length" align-center>
+          <el-step
+            v-for="(ritem, rindex) in item.recordinfo"
+            :key="rindex"
+            :title="ritem"
+            icon="el-icon-location"
+          >
+            <template v-slot:title>
+              {{ ritem }}
+            </template>
+          </el-step>
+        </el-steps>
+      </el-tab-pane>
+    </el-tabs>
+
     <div style="margin:10px 0;">
       <label style="display:inline-block;width:108px">处理状态： </label>
       <el-button type="" @click="handelCreate">有待跟进</el-button>
@@ -272,7 +291,6 @@ export default {
       temp.usercityname = ''
       temp.userid = this.$store.state.user.userInfo.id
       for (const key in this.userinfo) {
-        console.log(this.startUserInfo[key], this.userinfo[key])
         if (this.startUserInfo[key] === this.userinfo[key]) {
           temp[key] = ''
         } else {

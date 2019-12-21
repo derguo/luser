@@ -6,7 +6,7 @@ export function login(data) {
     url: '../token',
     method: 'post',
     headers: {
-      'Access-Control-Request-Headers': 'content-type'
+      // 'Access-Control-Request-Headers': 'content-type'
     },
     data: qs.stringify(Object.assign(data, { grant_type: 'password' }))
   })
