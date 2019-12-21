@@ -28,7 +28,18 @@ import { chilstateinfo } from '@/api/user'
 
 export default {
   name: 'FollowUp',
-  props: ['userinfo', 'parentstateid'],
+  props: {
+    userinfo: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    parentstateid: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       loging: true,
