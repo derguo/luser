@@ -95,7 +95,7 @@ export default {
       const chilstate = await chilstateinfo(this.$store.state.user.token,
         {
           rsuserid: this.$route.query.rsuserid,
-          registerno: this.$route.query.registerno,
+          registerno: this.userinfo.registerno,
           parentstateid: this.parentstateid
         })
 

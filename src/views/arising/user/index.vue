@@ -93,7 +93,7 @@
     </el-form>
 
     <el-collapse v-if="sninfos.length" accordion>
-      <el-collapse-item v-for="item in sninfos" :key="item.sn" :title="'sn:'+item.sn">
+      <el-collapse-item v-for="item in sninfos" :key="item.sn" :title="'序列号 : '+item.sn">
         <el-form label-position="left" label-width="160px" size="mini">
           <el-form-item label="序列号：">
             <div>{{ item.sn }}</div>
@@ -132,13 +132,13 @@
       </el-collapse-item>
     </el-collapse>
     <el-dialog title="有待跟进" :visible.sync="dialogFormVisible">
-      <follow-up ref="handleFrom" :userinfo="this.$route.query" :parentstateid="3" @upsucces="followupsuccess" />
+      <follow-up ref="handleFrom" :userinfo="startUserInfo" :parentstateid="3" @upsucces="followupsuccess" />
     </el-dialog>
     <el-dialog title="处理成功" :visible.sync="dialogFormVisible1">
-      <follow-up ref="handleFrom1" :userinfo="this.$route.query" :parentstateid="5" @upsucces="followupsuccess" />
+      <follow-up ref="handleFrom1" :userinfo="startUserInfo" :parentstateid="5" @upsucces="followupsuccess" />
     </el-dialog>
     <el-dialog title="失败" :visible.sync="dialogFormVisible2">
-      <follow-up ref="handleFrom2" :userinfo="this.$route.query" :parentstateid="7" @upsucces="followupsuccess" />
+      <follow-up ref="handleFrom2" :userinfo="startUserInfo" :parentstateid="7" @upsucces="followupsuccess" />
     </el-dialog>
   </div>
 </template>
@@ -211,6 +211,7 @@ export default {
   watch: {
   },
   async created() {
+    console.log('用户页面路由：', this.$route.params.id)
     try {
       await this.$store.dispatch('user/getCity')
       await this.$store.dispatch('user/getIndustry')
@@ -268,8 +269,8 @@ export default {
     async getCustomHandleState() {
       const response = await getCustomHandleState(this.$store.state.user.token,
         {
-          rsuserid: this.$route.query.rsuserid,
-          registerno: this.$route.query.registerno,
+          rsuserid: this.startUserInfo.rsuserid,
+          registerno: this.startUserInfo.registerno,
           userid: this.$store.state.user.userInfo.id
         })
       return response

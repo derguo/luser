@@ -399,7 +399,7 @@ export default {
       this.$nextTick(() => {
         this.$router.push({
           path: `auser/index/${row.registerno}`,
-          query: row
+          query: { rsuserid: row.rsuserid }
         })
       })
     },
