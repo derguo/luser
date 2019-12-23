@@ -7,7 +7,7 @@
         :label="item.statename"
         :name="'state'+item.stateid"
       >
-        <span v-for="(ritem, rindex) in item.recordinfo" :key="rindex" style="display:inline-block;margin:5px 50px 5px 0px;color:#606266;">
+        <span v-for="(ritem, rindex) in item.recordinfo" :key="rindex" style="display:block;margin:5px 50px 5px 0px;color:#606266;">
           {{ ritem }}
         </span>
 
@@ -111,7 +111,7 @@
             <div>{{ item.regdate }}</div>
           </el-form-item>
           <el-form-item label="序列号状态：" class="yiban">
-            <div>{{ item.snstate }}</div>
+            <div>{{ item.snstate != 0 ? item.snstate == 1 ? '注销' : '暂停' : '正常' }}</div>
           </el-form-item>
           <el-form-item label="服务开始日期：" class="yiban">
             <div>{{ item.startdate }}</div>
@@ -120,7 +120,7 @@
             <div>{{ item.enddate }}</div>
           </el-form-item>
           <el-form-item label="注册状态：" class="yiban">
-            <div>{{ item.regstate }}</div>
+            <div>{{ (item.regstate != 0) ? '已注册' : '未注册' }}</div>
           </el-form-item>
           <el-form-item label="规模1：" class="yiban">
             <div>{{ item.prodcount1 }}</div>
