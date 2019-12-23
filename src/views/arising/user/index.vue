@@ -7,7 +7,11 @@
         :label="item.statename"
         :name="'state'+item.stateid"
       >
-        <el-steps :active="item.recordinfo.length" align-center>
+        <span v-for="(ritem, rindex) in item.recordinfo" :key="rindex" style="display:inline-block;margin:5px 50px 5px 0px;color:#606266;">
+          {{ ritem }}
+        </span>
+
+        <!-- <el-steps :active="item.recordinfo.length" align-center>
           <el-step
             v-for="(ritem, rindex) in item.recordinfo"
             :key="rindex"
@@ -18,10 +22,9 @@
               {{ ritem }}
             </template>
           </el-step>
-        </el-steps>
+        </el-steps> -->
       </el-tab-pane>
     </el-tabs>
-
     <div style="margin:10px 0;">
       <label style="display:inline-block;width:108px">处理状态： </label>
       <el-button type="" @click="handelCreate">有待跟进</el-button>

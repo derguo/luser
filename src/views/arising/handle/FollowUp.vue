@@ -81,6 +81,7 @@ export default {
     this.followdata.rsuserid = this.userinfo.rsuserid
     this.followdata.parentstateid = this.parentstateid
     this.followdata.userid = this.$store.state.user.userInfo.id
+    this.followdata.rsuserid = this.$route.query.rsuserid
 
     try {
       await this.$store.dispatch('user/getRegion')
@@ -114,7 +115,7 @@ export default {
         async val => {
           if (val.errorcode === 0) {
             this.followdata.stateid = ''
-            await this.getChilstateInfo()
+            this.chilstateinfo = await this.getChilstateInfo()
             this.stateides = []
             this.loging = false
             Message({
