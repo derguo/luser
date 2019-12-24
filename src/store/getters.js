@@ -13,6 +13,7 @@ const getters = {
   errorLogs: state => state.errorLog.logs,
   citys: state => state.user.city,
   industry: state => state.user.industry,
-  userInfo: state => state.user.userInfo
+  userInfo: state => state.user.userInfo,
+  region: state => state.user.region
 }
 export default getters

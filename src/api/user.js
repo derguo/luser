@@ -39,6 +39,18 @@ export function upCustomerState(token, datas) {
   })
 }
 
+export function addusers(token, datas) {
+  return request({
+    url: '/users/addusers',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(datas)
+  })
+}
+
 export function getInfo(token, username) {
   return request({
     url: '/users/getbaseone',

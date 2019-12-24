@@ -129,6 +129,17 @@ const actions = {
     }
     return state.city
   },
+  async getBigRegion({ commit, state }) {
+    if (!state.region.length) {
+      try {
+        const response = await getBasic(state.token, basicType.REGION, { regionid: -1 })
+        commit('SET_REGION', response.info)
+      } catch (error) {
+        throw new Error('获取大区列表出错')
+      }
+    }
+    return state.region
+  },
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo

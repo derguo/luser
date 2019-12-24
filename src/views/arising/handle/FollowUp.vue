@@ -7,7 +7,7 @@
     </el-form-item>
     <el-form-item label="备注说明">
       <el-input
-        v-model="followdata.cerrentdesc"
+        v-model="followdata.currentdesc"
         type="textarea"
         :rows="2"
         placeholder="请输入内容"
@@ -109,7 +109,7 @@ export default {
       this.followdata.registerno = ''
       this.followdata.parentstateid = -1
       this.followdata.stateid = []
-      this.followdata.cerrentdesc = ''
+      this.followdata.currentdesc = ''
     },
     handleSub() {
       this.loging = true
