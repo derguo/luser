@@ -7,7 +7,7 @@
         :label="item.statename"
         :name="'state'+item.stateid"
       >
-        <span v-for="(ritem, rindex) in item.recordinfo" :key="rindex" style="display:block;margin:5px 50px 5px 0px;color:#606266;">
+        <span v-for="(ritem, rindex) in item.recordinfo" :key="rindex" style="display:block;margin:5px 50px 5px 0px;color:#606266;font-size: 14px;height:23px;line-height:23px">
           {{ ritem }}
         </span>
 
@@ -33,7 +33,7 @@
     </div>
     <el-form ref="form" label-position="left" label-width="110px" size="mini">
       <el-form-item label="客户注册码：">
-        <div>{{ userinfo.registerno }}</div>
+        <div style="color:#606266">{{ userinfo.registerno }}</div>
       </el-form-item>
       <el-form-item label="单位全称：">
         <el-input v-model="userinfo.companyname" style="width: 47%;" />

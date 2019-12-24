@@ -89,6 +89,18 @@ export const constantRoutes = [
       }
     ]
   }
+  // {
+  //   path: '/adduser',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/arising/user/AddUsers'),
+  //       name: 'AddUsers',
+  //       meta: { title: '添加用户', icon: 'form', noCache: false, affix: true }
+  //     }
+  //   ]
+  // }
 ]
 
 /**

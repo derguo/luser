@@ -317,6 +317,7 @@ export default {
     getStepList(val) {
       this.userListQuery.stateid = val.stateid
       this.getList()
+      this.userListQuery.stateid = val.stateid[0]
     },
     allocationsucces() {
       this.assignVisible = false

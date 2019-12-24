@@ -50,7 +50,7 @@ export default {
         rsuserid: -1,
         parentstateid: 3,
         stateid: '',
-        cerrentdesc: '',
+        currentdesc: '',
         userid: -1
       }
     }
