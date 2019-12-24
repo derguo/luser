@@ -57,13 +57,16 @@ export default {
   },
   computed: {
     statesinfo() {
-      return this.$store.state.user.states.find(item => {
+      let si = this.$store.state.user.states.find(item => {
         return item.aid === this.parentstateid.toString()
-      }) || { children: [] }
+      })
+      si = JSON.parse(JSON.stringify(si || { children: [] }))
+      return si
     }
   },
   watch: {
     chilstateinfo(val) {
+      console.log('员工操作的客户状态：', val)
       val.forEach(element => {
         const sinfo = this.statesinfo.children.find(item => {
           return item.bid === element.stateid

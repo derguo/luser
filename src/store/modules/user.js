@@ -76,7 +76,6 @@ const mutations = {
 
 const actions = {
   async getRegion({ commit, state, dispatch }) {
-    console.log(state.states && state.states[0].children)
     if (!(state.states && state.states[0].children)) {
       try {
         const response = await getBasic(state.token, basicType.STATE, { flag: -1, stateid: -1 })
