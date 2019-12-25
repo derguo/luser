@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item label="省 份" prop="provinceid">
         <el-select v-model="user.provinceid" placeholder="请选择员工所在省份" style="width:100%">
-          <el-option v-for="(item, index) in citys" :key="index" :label="item.name" :value="item.id" />
+          <el-option v-for="(item, index) in citys" :key="index" :label="'['+item.id+'] '+item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="级别" prop="authorid">
@@ -63,8 +63,8 @@ export default {
         phone: '',
         provinceid: '',
         regionid: '',
-        authorid: '',
-        assignment: ''
+        authorid: '15',
+        assignment: '0'
       },
       rules: {
         newusername: [

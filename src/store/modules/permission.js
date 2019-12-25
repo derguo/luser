@@ -6,6 +6,7 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) {
+  console.log('权限和路由', roles, route)
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
   } else {
@@ -30,7 +31,7 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-
+  console.log('处理后的路由', res)
   return res
 }
 
@@ -50,7 +51,8 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')) {
+      console.log('是否管理员0', roles, roles.includes(0))
+      if (roles.includes(0)) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)

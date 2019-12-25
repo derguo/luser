@@ -85,19 +85,7 @@ export const constantRoutes = [
         path: 'mainpage',
         component: () => import('@/views/arising/home/index'),
         name: 'Home',
-        meta: { title: '用户列表', icon: 'peoples', noCache: false, affix: true, roles: ['0'] }
-      }
-    ]
-  },
-  {
-    path: '/adduser',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/arising/user/AddUsers'),
-        name: 'AddUsers',
-        meta: { title: '添加用户', icon: 'form', noCache: false, affix: true }
+        meta: { title: '用户列表', icon: 'peoples', noCache: false, affix: true }
       }
     ]
   }
@@ -108,6 +96,18 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/adduser',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/arising/user/AddUsers'),
+        name: 'AddUsers',
+        meta: { title: '添加用户', icon: 'form', noCache: false, affix: true, roles: [0, 5, 10] }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
