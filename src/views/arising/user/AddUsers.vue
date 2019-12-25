@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item label="省 份" prop="provinceid">
         <el-select v-model="user.provinceid" placeholder="请选择员工所在省份" style="width:100%">
-          <el-option v-for="(item, index) in citys" :key="index" :label="'['+item.id+'] '+item.name" :value="item.id" />
+          <el-option v-for="(item, index) in province" :key="index" :label="'['+item.id+'] '+item.name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="级别" prop="authorid">
@@ -49,7 +49,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { addusers } from '@/api/user'
+import { addusers, getone } from '@/api/user'
+import { Message } from 'element-ui'
 export default {
   name: 'AddUsers',
   data() {
@@ -103,13 +104,12 @@ export default {
       region: 'region',
       token: 'token',
       authorType: 'authorType',
-      citys: 'citys'
+      province: 'province'
     })
   },
   async created() {
     await this.getRegion()
     await this.getAuthorType()
-    await this.getCity()
 
     this.user.userid = this.userInfo.id
     this.user.username = this.userInfo.username
@@ -124,11 +124,22 @@ export default {
     addUser() {
       this.$nextTick(() => {
         this.$refs['userForm'].validate((valid) => {
+          console.log(valid)
           if (valid) {
-            addusers(this.token, this.user)
-            alert('submit!')
+            addusers(this.token, this.user).then((val) => {
+              Message({
+                message: '添加用户成功！',
+                type: 'success',
+                duration: 5 * 1000
+              })
+            }).catch(() => {
+              Message({
+                message: '查询基础数据错误,不允许提交数据',
+                type: 'warning',
+                duration: 5 * 1000
+              })
+            })
           } else {
-            console.log('error submit!!')
             return false
           }
         })
@@ -136,11 +147,11 @@ export default {
     },
     async exist(rule, value, callback) {
       try {
-        const un = await this.getInfo(value)
-        console.log(un)
-        callback(new Error('用户名已经存在!'))
+        const un = await getone(this.token, value)
+
+        un.info.length ? callback(new Error('用户名已经存在!')) : callback()
       } catch (error) {
-        callback()
+        callback(new Error('未知!' + error))
       }
     }
   }

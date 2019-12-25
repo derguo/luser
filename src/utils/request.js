@@ -62,7 +62,7 @@ service.interceptors.response.use(
     }
     // if the custom code is not 20000, it is judged as an error.
     res.errorcode = res.errorcode * 1
-    if (res.errorcode !== 0) {
+    if (res.errorcode !== 0 && res.errorcode !== -97) {
       if (res.errorcode === 1 || res.errorcode === 2) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {

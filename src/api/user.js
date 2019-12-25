@@ -64,6 +64,19 @@ export function getInfo(token, username) {
   })
 }
 
+export function getone(token, username) {
+  return request({
+    url: '/users/getone',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify({ username })
+    // ,params: { token }
+  })
+}
+
 export function customInfo(token, datas) {
   return request({
     url: '/customProduct/customInfo',
