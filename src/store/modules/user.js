@@ -160,9 +160,10 @@ const actions = {
   },
 
   // get user info
-  getInfo({ commit, state }) {
+  getInfo({ commit, state }, username) {
+    const uname = username || state.username
     return new Promise((resolve, reject) => {
-      getInfo(state.token, state.username).then(response => {
+      getInfo(state.token, uname).then(response => {
         const info = response.info[0]
 
         if (!info) {

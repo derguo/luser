@@ -14,6 +14,7 @@ const getters = {
   citys: state => state.user.city,
   industry: state => state.user.industry,
   userInfo: state => state.user.userInfo,
-  region: state => state.user.region
+  region: state => state.user.region,
+  authorType: state => state.user.authorType
 }
 export default getters
