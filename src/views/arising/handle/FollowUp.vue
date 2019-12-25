@@ -25,6 +25,7 @@
 import { followUp } from '@/api/handle'
 import { Message } from 'element-ui'
 import { chilstateinfo } from '@/api/user'
+import { EventBus } from '@/eventBus'
 
 export default {
   name: 'FollowUp',
@@ -66,7 +67,6 @@ export default {
   },
   watch: {
     chilstateinfo(val) {
-      console.log('员工操作的客户状态：', val)
       val.forEach(element => {
         const sinfo = this.statesinfo.children.find(item => {
           return item.bid === element.stateid
@@ -126,6 +126,7 @@ export default {
               type: 'success',
               duration: 5 * 1000
             })
+            EventBus.$emit('refreshList')
           } else {
             this.loging = false
             Message({

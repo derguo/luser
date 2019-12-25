@@ -173,6 +173,8 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import assign from '@/views/arising/assign/index'
 import { Message } from 'element-ui'
+
+import { EventBus } from '@/eventBus'
 // import moment from 'moment'
 
 const calendarTypeOptions = [
@@ -312,6 +314,12 @@ export default {
   },
   created() {
     this.getList()
+  },
+  mounted() {
+    EventBus.$on('refreshList', () => {
+      console.log('刷新列表')
+      this.getList()
+    })
   },
   methods: {
     getStepList(val) {

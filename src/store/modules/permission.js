@@ -51,7 +51,6 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      console.log('是否管理员0', roles, roles.includes(0))
       if (roles.includes(0)) {
         accessedRoutes = asyncRoutes || []
       } else {
