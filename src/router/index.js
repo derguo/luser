@@ -85,7 +85,7 @@ export const constantRoutes = [
         path: 'mainpage',
         component: () => import('@/views/arising/home/index'),
         name: 'Home',
-        meta: { title: '用户列表', icon: 'peoples', noCache: false, affix: true }
+        meta: { title: '客户列表', icon: 'peoples', noCache: false, affix: true }
       }
     ]
   }
@@ -104,7 +104,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/arising/user/AddUsers'),
         name: 'AddUsers',
-        meta: { title: '添加用户', icon: 'form', noCache: false, affix: true, roles: [0, 5, 10] }
+        meta: { title: '添加用户', icon: 'form', noCache: false, affix: false, roles: [0, 5, 10] }
       }
     ]
   },
