@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
+    <div class="filter-container">{{ userListQuery }}<br>
+      <state-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 120px">
+        <el-option v-for="item in $store.state.user.states" :key="item.id" :label="item.name" :value="item.id" />
+      </state-select>
       <el-select v-model="userListQuery.provinceid" placeholder="用户省份" clearable style="width: 110px" class="filter-item">
         <el-option v-for="item in $store.state.user.province" :key="item.index" :label="item.name" :value="item.id" />
       </el-select>
@@ -173,8 +176,8 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import assign from '@/views/arising/assign/index'
 import { Message } from 'element-ui'
-
 import { EventBus } from '@/eventBus'
+import stateSelect from '@/views/arising/home/StateSelect'
 // import moment from 'moment'
 
 const calendarTypeOptions = [
@@ -192,7 +195,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'Home',
-  components: { Pagination, assign },
+  components: { Pagination, assign, stateSelect },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -209,6 +212,7 @@ export default {
   },
   data() {
     return {
+      test: '',
       role: this.$store.state.user.userInfo.authorid === 0,
       assignVisible: false,
       nowPage: [],
@@ -317,7 +321,6 @@ export default {
   },
   mounted() {
     EventBus.$on('refreshList', () => {
-      console.log('刷新列表')
       this.getList()
     })
   },
@@ -325,7 +328,7 @@ export default {
     getStepList(val) {
       this.userListQuery.stateid = val.stateid
       this.getList()
-      this.userListQuery.stateid = val.stateid[0]
+      // this.userListQuery.stateid = val.stateid[0]
     },
     allocationsucces() {
       this.assignVisible = false
