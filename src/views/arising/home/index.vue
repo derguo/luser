@@ -1,18 +1,15 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">{{ userListQuery }}<br>
-      <state-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 120px">
-        <el-option v-for="item in $store.state.user.states" :key="item.id" :label="item.name" :value="item.id" />
-      </state-select>
+    <div class="filter-container">
       <el-select v-model="userListQuery.provinceid" placeholder="用户省份" clearable style="width: 110px" class="filter-item">
         <el-option v-for="item in $store.state.user.province" :key="item.index" :label="item.name" :value="item.id" />
       </el-select>
       <el-select v-model="userListQuery.productid" placeholder="产品类型" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.products" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-      <el-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 120px">
+      <state-select v-model="userListQuery.stateid" :v-if="role" placeholder="处理状态" clearable class="filter-item" style="width: 120px">
         <el-option v-for="item in $store.state.user.states" :key="item.id" :label="item.name" :value="item.id" />
-      </el-select>
+      </state-select>
       <el-select v-model="userListQuery.rsuserid" placeholder="跟进人" clearable class="filter-item" style="width: 110px">
         <el-option v-for="item in $store.state.user.users" :key="item.id" :label="item.cnname" :value="item.id" />
       </el-select>
@@ -155,13 +152,16 @@
                 @click.native="getStepList(sitem)"
               />
             </el-steps>
-            <div slot="reference" style="cursor: pointer;">
+            <div slot="reference" style="cursor: pointer;height:70px;">
               <div>{{ item.statename }}</div>
               <div style="font-size:12px;line-height:12px;cursor: pointer;">
                 {{ item.num+'个' }}
               </div>
             </div>
           </el-popover>
+        </template>
+        <template v-if="!!userListQuery.stateid" v-slot:description>
+          <el-button type="text" icon="el-icon-back" @click.stop="stepBack">返回</el-button>
         </template>
       </el-step>
     </el-steps>
@@ -325,6 +325,10 @@ export default {
     })
   },
   methods: {
+    stepBack() {
+      this.userListQuery.stateid = ''
+      this.getList()
+    },
     getStepList(val) {
       this.userListQuery.stateid = val.stateid
       this.getList()

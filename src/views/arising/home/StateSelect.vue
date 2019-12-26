@@ -1,7 +1,6 @@
 <template>
-  <el-select v-model="checked" clearable @change="choose">
+  <el-select v-model="checked" :placeholder="placeholder" :clearable="clearable" @change="choose">
     <slot />
-    {{ states }}
   </el-select>
 </template>
 
@@ -17,6 +16,14 @@ export default {
     selectValue: {
       type: String,
       default: ''
+    },
+    placeholder: {
+      type: String,
+      default: ''
+    },
+    clearable: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -29,12 +36,11 @@ export default {
   },
   watch: {
     selectValue(val) {
-      console.log(this.states)
       const sitem = this.states.find((item) => {
         if (item.id === val) {
           return true
         } else {
-          const citem = item.bchildren.find((i) => {
+          const citem = item.children.find((i) => {
             return i.bid === val
           })
           return !!citem

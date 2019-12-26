@@ -102,6 +102,7 @@ export default {
           registerno: this.userinfo.registerno,
           parentstateid: this.parentstateid
         })
+      this.followdata.currentdesc = chilstate.currentdesc
 
       return chilstate.info
     },
