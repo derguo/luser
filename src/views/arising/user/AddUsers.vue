@@ -119,12 +119,13 @@ export default {
       getRegion: 'user/getBigRegion',
       getAuthorType: 'user/getAuthorType',
       getCity: 'user/getCity',
-      getInfo: 'user/getInfo'
+      getInfo: 'user/getInfo',
+      getUsers: 'user/getUsers'
     }),
     addUser() {
       this.$nextTick(() => {
         this.$refs['userForm'].validate((valid) => {
-          console.log(valid)
+          console.log('ddddddddddddd', valid)
           if (valid) {
             addusers(this.token, this.user).then((val) => {
               Message({
@@ -132,6 +133,7 @@ export default {
                 type: 'success',
                 duration: 5 * 1000
               })
+              this.getUsers()
             }).catch(() => {
               Message({
                 message: '查询基础数据错误,不允许提交数据',
@@ -147,9 +149,11 @@ export default {
     },
     async exist(rule, value, callback) {
       try {
+        this.loging = true
         const un = await getone(this.token, value)
 
         un.info.length ? callback(new Error('用户名已经存在!')) : callback()
+        this.loging = false
       } catch (error) {
         callback(new Error('未知!' + error))
       }

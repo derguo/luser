@@ -108,6 +108,18 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/resetpassword',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/arising/user/resetPass'),
+        name: 'ResetPassword',
+        meta: { title: '修改/重置密码', icon: 'password', noCache: false, affix: false }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -1,4 +1,4 @@
-import { login, getInfo } from '@/api/user'
+import { login, getInfo, getUsers } from '@/api/user'
 import { getToken, setToken, removeToken, getRefreshToken, setRefreshToken, removeRefreshToken, setUserName, getUserName, removeUserName } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 import { getBasic, basicType } from '@/api/basicData'
@@ -139,6 +139,14 @@ const actions = {
       }
     }
     return state.region
+  },
+  async getUsers({ commit, state }) {
+    try {
+      const response = await getUsers(state.token, { regionid: state.userInfo.regionid, authorid: state.userInfo.authorid })
+      commit('SET_USERS', response.info)
+    } catch (error) {
+      throw new Error('获取跟进人列表出错')
+    }
   },
   // user login
   login({ commit }, userInfo) {
