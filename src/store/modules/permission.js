@@ -6,7 +6,6 @@ import { asyncRoutes, constantRoutes } from '@/router'
  * @param route
  */
 function hasPermission(roles, route) {
-  console.log('权限和路由', roles, route)
   if (route.meta && route.meta.roles) {
     return roles.some(role => route.meta.roles.includes(role))
   } else {
@@ -31,7 +30,6 @@ export function filterAsyncRoutes(routes, roles) {
       res.push(tmp)
     }
   })
-  console.log('处理后的路由', res)
   return res
 }
 

@@ -37,7 +37,6 @@
       <el-form-item>
         <el-row>
           <el-button type="primary" @click.native.prevent="addUser">确认提交</el-button>
-          <el-button>取消返回</el-button>
         </el-row>
       </el-form-item>
       <div>
@@ -70,7 +69,7 @@ export default {
       rules: {
         newusername: [
           { required: true, message: '请输入登陆名', trigger: 'blur' },
-          { min: 4, max: 12, message: '长度在 3 到 5 个字符', trigger: 'blur' },
+          { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
           { pattern: /^[a-zA-z]+$/, message: '必须用英文字母' },
           { validator: this.exist, trigger: 'blur' }
         ],
@@ -125,7 +124,6 @@ export default {
     addUser() {
       this.$nextTick(() => {
         this.$refs['userForm'].validate((valid) => {
-          console.log('ddddddddddddd', valid)
           if (valid) {
             addusers(this.token, this.user).then((val) => {
               Message({

@@ -76,6 +76,19 @@ export function getInfo(token, username) {
   })
 }
 
+export function mdfpwd(token, data) {
+  return request({
+    url: '/users/mdfpwd',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `bearer ${token}`
+    },
+    data: qs.stringify(data)
+    // ,params: { token }
+  })
+}
+
 export function getone(token, username) {
   return request({
     url: '/users/getone',
