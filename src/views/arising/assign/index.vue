@@ -5,7 +5,7 @@
       <el-input v-model="sherchStr" placeholder="搜索" size="mini" style="margin:20px 0px;width:220px;" />
     </div>
     <el-radio-group v-model="chooseLable">
-      <el-radio v-for="item in sherchRadios" :key="item.id" :disabled="item.authorid < 15" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.cnname }}</el-radio>
+      <el-radio v-for="item in sherchRadiosFilter" :key="item.id" :disabled="item.authorid < 15" :label="item.id" border style="margin:0px 30px 10px 0px">{{ item.cnname }}</el-radio>
     </el-radio-group>
     <div style="margin:10px 0;">
       <el-button type="primary" @click="allocationsub">确定</el-button>
@@ -42,6 +42,11 @@ export default {
       return this.chooseUser.map((item) => {
         return item.registerno
       }).join(',')
+    },
+    sherchRadiosFilter() {
+      return this.sherchRadios.filter(item => {
+        return item.authorid >= 15
+      })
     }
   },
   watch: {

@@ -13,6 +13,9 @@
       <el-form-item label="重复新密码" prop="repeatpass">
         <el-input v-model="repeatpass" type="password" placeholder="重复新密码" />
       </el-form-item>
+      <el-form-item v-if="userInfo.authorid != '15'" label="">
+        <div style="color:#606266">如需重置某员工密码，请在下列表选择用户。</div>
+      </el-form-item>
       <el-form-item v-if="userInfo.authorid != '15'" label="选择用户" prop="repeatpass">
         <el-select v-model="pass.newuserid" collapse-tags placeholder="请选择用户" style="width:100%" @change="chooseUser">
           <el-option v-for="(item, index) in users" :key="index" :label="item.cnname" :value="item.id" />
@@ -29,7 +32,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { login, mdfpwd } from '@/api/user'
+import { mdfpwd } from '@/api/user'
 import { Message } from 'element-ui'
 import MD5 from 'js-md5'
 export default {
@@ -38,6 +41,7 @@ export default {
     return {
       loging: false,
       repeatpass: '',
+      oldpwdErrorcode: undefined,
       pass: {
         userid: '', // 当前登录员工ID
         username: '', // 当前登录员工username
@@ -53,7 +57,8 @@ export default {
         ],
         newpwd: [
           { required: true, message: '请输入新密码', trigger: 'blur' },
-          { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+          { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' },
+          { validator: this.verifyNewpass, trigger: 'blur' }
         ],
         repeatpass: [
           { validator: this.verifyRepeatpass, trigger: 'blur' }
@@ -69,22 +74,28 @@ export default {
     })
   },
   async created() {
-    await this.getUsers()
-
     this.pass.userid = this.userInfo.id
     this.pass.newuserid = this.userInfo.id
     this.pass.username = this.userInfo.username
   },
   methods: {
     ...mapActions({
-      getUsers: 'user/getUsers'
+      logout: 'user/logout'
     }),
-    async verifyPass(rule, value, callback) {
-      console.log(value)
-      try {
-        await login({ username: this.userInfo.username, password: MD5(value) })
-      } catch (error) {
-        callback(new Error('原始密码不正确!'))
+    verifyPass(rule, value, callback) {
+      this.oldpwdErrorcode = callback
+      callback()
+      // try {
+      //   await login({ username: this.userInfo.username, password: MD5(value) })
+      // } catch (error) {
+      //   callback(new Error('原始密码不正确!'))
+      // }
+    },
+    verifyNewpass(rule, value, callback) {
+      if (this.pass.oldpwd === this.pass.newpwd) {
+        callback(new Error('新老密码不要一致'))
+      } else {
+        callback()
       }
     },
     verifyRepeatpass(rule, value, callback) {
@@ -98,20 +109,34 @@ export default {
       this.$refs['passForm'].validate((valid) => {
         if (valid) {
           this.loging = true
-          this.pass.newpwd = MD5(this.pass.newpwd)
-          this.pass.oldpwd = MD5(this.pass.oldpwd)
-          mdfpwd(this.token, this.pass).then(() => {
+          const requesetPaa = Object.assign({}, this.pass, {
+            newpwd: MD5(this.pass.newpwd),
+            oldpwd: MD5(this.pass.oldpwd)
+          })
+          mdfpwd(this.token, requesetPaa).then(() => {
             Message({
               message: '修改成功！',
               type: 'success',
               duration: 5 * 1000
             })
-          }).catch(() => {
-            Message({
-              message: '修改失败！',
-              type: 'warning',
-              duration: 5 * 1000
-            })
+
+            if (this.pass.userid === this.pass.newuserid) {
+              this.logout()
+              this.$router.push('/')
+            }
+          }).catch(error => {
+            switch (error.errorcode) {
+              case -96:
+                // this.oldpwdCallback(new Error('原始密码不正确!'))
+                Message({
+                  message: '原始密码不正确!！',
+                  type: 'warning',
+                  duration: 5 * 1000
+                })
+                break
+              default:
+                break
+            }
           })
           this.loging = false
         }

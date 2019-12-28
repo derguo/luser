@@ -10,10 +10,11 @@ const errorCodeInfo = {
   '3': '数据库异常',
   '4': '无此大区',
   '5': '无此级别',
+  '-96': '修改密码，原用户名密码错误 ',
   '-97': '符合条件的记录为 0 条',
   '-98': '缺少必要的参数',
   '-99': '未知异常',
-  '-1002': '用户不存在'
+  '1002': '用户不存在'
 }
 
 // create an axios instance
@@ -78,19 +79,29 @@ service.interceptors.response.use(
 
       Message({
         message: `errorcode: ${res.errorcode} -- ${errorCodeInfo[res.errorcode] || '未知错误编码'}`,
-        type: 'error',
+        type: 'warning',
         duration: 5 * 1000
       })
 
-      return Promise.reject(new Error(errorCodeInfo[res.errorcode] || '未知错误编码'))
+      return Promise.reject(Object.assign(res, { message: errorCodeInfo[res.errorcode] || '未知错误编码' }))
     } else {
       return res
     }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log(error.response) // for debug
+    const errStatus = error.response.status
+    const errDate = error.response.data
+    let errMassage = errDate
+    switch (errStatus) {
+      case 400:
+        errMassage = errDate.error_description
+        break
+      default:
+        break
+    }
     Message({
-      message: error.message,
+      message: errMassage,
       type: 'error',
       duration: 5 * 1000
     })

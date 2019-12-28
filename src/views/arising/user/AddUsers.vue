@@ -118,8 +118,7 @@ export default {
       getRegion: 'user/getBigRegion',
       getAuthorType: 'user/getAuthorType',
       getCity: 'user/getCity',
-      getInfo: 'user/getInfo',
-      getUsers: 'user/getUsers'
+      getInfo: 'user/getInfo'
     }),
     addUser() {
       this.$nextTick(() => {
@@ -131,10 +130,9 @@ export default {
                 type: 'success',
                 duration: 5 * 1000
               })
-              this.getUsers()
             }).catch(() => {
               Message({
-                message: '查询基础数据错误,不允许提交数据',
+                message: '添加用户失败！',
                 type: 'warning',
                 duration: 5 * 1000
               })
