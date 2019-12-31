@@ -101,7 +101,7 @@ service.interceptors.response.use(
         break
     }
     Message({
-      message: errMassage.Message,
+      message: errMassage,
       type: 'error',
       duration: 5 * 1000
     })
