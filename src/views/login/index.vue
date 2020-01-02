@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// import { validUsername } from '@/utils/validate'
 import SocialSign from './components/SocialSignin'
 import MD5 from 'js-md5'
 
@@ -82,13 +82,13 @@ export default {
   name: 'Login',
   components: { SocialSign },
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!validUsername(value)) {
+    //     callback(new Error('请输入正确的用户名'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能少于6位'))
@@ -102,8 +102,16 @@ export default {
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, message: '请输入登陆名', trigger: 'blur' },
+          { min: 4, max: 12, message: '长度在 4 到 12 个字符', trigger: 'blur' },
+          { pattern: /^[a-zA-z]+$/, message: '必须用英文字母' }
+          // { required: true, trigger: 'blur', validator: validateUsername }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       passwordType: 'password',
       capsTooltip: false,
