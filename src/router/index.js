@@ -120,6 +120,18 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/log',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/arising/log/logList'),
+        name: 'LogList',
+        meta: { title: '日志', icon: 'list', noCache: false, affix: false }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

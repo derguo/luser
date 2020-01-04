@@ -117,7 +117,7 @@ export default {
       this.followdata.stateid = this.stateides.join(',')
       followUp(this.$store.state.user.token, this.followdata).then(
         async val => {
-          console.log(val)
+          // console.log(val)
           if (val.errorcode === 0) {
             this.followdata.stateid = ''
             this.chilstateinfo = await this.getChilstateInfo()

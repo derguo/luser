@@ -38,7 +38,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    // console.log(error) // for debug
     return Promise.reject(error)
   }
 )
@@ -89,7 +89,7 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log(error.response) // for debug
+    // console.log(error.response) // for debug
     const errStatus = error.response.status
     const errDate = error.response.data
     let errMassage = errDate

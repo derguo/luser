@@ -20,7 +20,8 @@ const state = {
   products: [],
   region: [],
   authorType: [],
-  industry: []
+  industry: [],
+  logType: []
 }
 
 const mutations = {
@@ -71,6 +72,9 @@ const mutations = {
   },
   SET_CITY: (state, city) => {
     state.city = city
+  },
+  SET_LOGTYPE: (state, logtype) => {
+    state.logType = logtype
   }
 }
 
@@ -139,6 +143,16 @@ const actions = {
       }
     }
     return state.region
+  },
+  async getLogList({ commit, state }) {
+    if (!state.logType.length) {
+      try {
+        const res = await getBasic(state.token, basicType.LOG, { flag: 1 })
+        commit('SET_LOGTYPE', res.info)
+      } catch (error) {
+        throw new Error('获取日志类别出错')
+      }
+    }
   },
   // user login
   login({ commit }, userInfo) {

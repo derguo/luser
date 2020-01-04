@@ -181,8 +181,8 @@ export default {
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               // this.loading = false
             })
-            .catch((err) => {
-              console.log('登陆错误', err)
+            .catch(() => {
+              // console.log('登陆错误', err)
               this.loading = false
             })
         } else {
